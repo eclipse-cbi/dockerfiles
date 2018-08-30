@@ -7,7 +7,7 @@ RUN chmod u+x /usr/local/bin/uid_entrypoint && \
     chmod g=u /etc/passwd
 ENTRYPOINT [ "uid_entrypoint" ]
 
-ENV HUGO_VERSION=0.42.1
+ENV HUGO_VERSION=0.48
 ADD https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz /tmp
 RUN tar -xf /tmp/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz -C /tmp \
     && mkdir -p /usr/local/bin \
