@@ -1,0 +1,43 @@
+FROM adoptopenjdk/openjdk8:x86_64-alpine-jdk8u172-b11-slim@sha256:d2bed208a03ebbade55e694d5d4a505182586c4fd60eb13829eb93bd696db96b
+
+### user name recognition at runtime w/ an arbitrary uid - for OpenShift deployments
+COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint
+RUN chmod u+x /usr/local/bin/uid_entrypoint && \
+    chgrp 0 /usr/local/bin/uid_entrypoint && \
+    chmod g=u /etc/passwd
+### end
+
+RUN apk --no-cache add \
+    bash \
+    ca-certificates \
+    curl \
+    git \
+    gnupg \
+    openssh-client \
+    wget
+
+# https://github.com/jenkinsci/remoting/blob/master/CHANGELOG.md 
+# 3.25 => Release date: July 31, 2018 => Weekly 2.138 / LTS 2.121.3
+ARG REMOTING_VERSION=3.25
+
+# https://github.com/jenkinsci/docker-jnlp-slave/
+# 3.26-1 is latest (no 3.25 to match remoting)
+ARG JNLP_AGENT_SCRIPT_VERSION=3.26-1
+
+RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${REMOTING_VERSION}/remoting-${REMOTING_VERSION}.jar \
+  && chmod 755 /usr/share/jenkins \
+  && chmod 644 /usr/share/jenkins/slave.jar
+
+ADD https://raw.githubusercontent.com/jenkinsci/docker-jnlp-slave/${JNLP_AGENT_SCRIPT_VERSION}/jenkins-slave /usr/local/bin/jenkins-slave
+RUN chmod 555 /usr/local/bin/jenkins-slave && chgrp 0 /usr/local/bin/jenkins-slave
+
+COPY jenkins-jnlp-agent/known_hosts /home/jenkins/.ssh/known_hosts
+
+RUN chmod 775 /home/jenkins && \
+  chmod 770 /home/jenkins/.ssh && \
+  chmod 664 /home/jenkins/.ssh/known_hosts
+
+ENTRYPOINT [ "uid_entrypoint", "jenkins-slave"]
+ENV HOME=/home/jenkins
+WORKDIR /home/jenkins
+USER 10001
