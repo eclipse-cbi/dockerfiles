@@ -31,16 +31,12 @@ RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-c
 ADD https://raw.githubusercontent.com/jenkinsci/docker-jnlp-slave/${JNLP_AGENT_SCRIPT_VERSION}/jenkins-slave /usr/local/bin/jenkins-slave
 RUN chmod 555 /usr/local/bin/jenkins-slave && chgrp 0 /usr/local/bin/jenkins-slave
 
-COPY jenkins-jnlp-agent/known_hosts /home/jenkins/.ssh/known_hosts
-
-RUN chmod 775 /home/jenkins && \
-  chmod 770 /home/jenkins/.ssh && \
-  chmod 664 /home/jenkins/.ssh/known_hosts && \
+RUN mkdir -p /home/jenkins/.jenkins && \
   mkdir -p /home/jenkins/agent
 
 ENTRYPOINT [ "uid_entrypoint", "jenkins-slave"]
 ENV HOME=/home/jenkins
-ENV AGENT_WORKDIR=/home/jenkins/agent
+ENV JENKINS_AGENT_WORKDIR=/home/jenkins/agent
 WORKDIR /home/jenkins
 
 USER 10001
