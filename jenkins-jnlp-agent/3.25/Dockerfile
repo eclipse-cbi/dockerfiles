@@ -35,9 +35,12 @@ COPY jenkins-jnlp-agent/known_hosts /home/jenkins/.ssh/known_hosts
 
 RUN chmod 775 /home/jenkins && \
   chmod 770 /home/jenkins/.ssh && \
-  chmod 664 /home/jenkins/.ssh/known_hosts
+  chmod 664 /home/jenkins/.ssh/known_hosts && \
+  mkdir -p /home/jenkins/agent
 
 ENTRYPOINT [ "uid_entrypoint", "jenkins-slave"]
 ENV HOME=/home/jenkins
+ENV AGENT_WORKDIR=/home/jenkins/agent
 WORKDIR /home/jenkins
+
 USER 10001
