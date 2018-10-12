@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk8:jdk8u172-b11-alpine@sha256:381f39209dbe8ed9a785fe4e9a51423d196a365d45933372ef2229963255595a
+FROM adoptopenjdk/openjdk8:jdk8u172-b11-alpine-slim@sha256:be98cdae8a15ee9568441d9782134216e48fd13c60865d367a6e80ba410342a2
 
 ### user name recognition at runtime w/ an arbitrary uid - for OpenShift deployments
 COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint
@@ -37,5 +37,8 @@ RUN mkdir -p /home/jenkins/.jenkins && \
 ENTRYPOINT [ "uid_entrypoint", "jenkins-slave"]
 ENV HOME=/home/jenkins
 ENV JENKINS_AGENT_WORKDIR=/home/jenkins/agent
+ENV JAVA_OPTS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+ENV JAVA_TOOL_OPTIONS=
 WORKDIR /home/jenkins
+
 USER 10001
