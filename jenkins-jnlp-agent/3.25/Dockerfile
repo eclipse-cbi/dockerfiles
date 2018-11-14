@@ -14,7 +14,8 @@ RUN apk --no-cache add \
     git \
     gnupg \
     openssh-client \
-    wget
+    wget \
+    zip
 
 # https://github.com/jenkinsci/remoting/blob/master/CHANGELOG.md 
 # 3.25 => Release date: July 31, 2018 => Weekly 2.138 / LTS 2.121.3
