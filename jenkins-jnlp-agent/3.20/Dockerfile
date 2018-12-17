@@ -4,7 +4,7 @@ FROM adoptopenjdk/openjdk8:jdk8u172-b11-alpine-slim@sha256:be98cdae8a15ee9568441
 COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint
 RUN chmod u+x /usr/local/bin/uid_entrypoint && \
     chgrp 0 /usr/local/bin/uid_entrypoint && \
-    chmod g=u /etc/passwd
+    chmod g=u /usr/local/bin/uid_entrypoint /etc/passwd
 ### end
 
 RUN apk --no-cache add \

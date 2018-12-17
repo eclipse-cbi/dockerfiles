@@ -4,7 +4,7 @@ FROM ubuntu:16.04@sha256:76702ec53c5e7771ba3f2c4f6152c3796c142af2b3cb1a02fce66c6
 COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint
 RUN chmod u+x /usr/local/bin/uid_entrypoint && \
     chgrp 0 /usr/local/bin/uid_entrypoint && \
-    chmod g=u /etc/passwd
+    chmod g=u /usr/local/bin/uid_entrypoint /etc/passwd
 ENTRYPOINT [ "uid_entrypoint" ]
 
 ENV DEBIAN_FRONTEND noninteractive

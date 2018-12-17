@@ -1,10 +1,10 @@
-FROM alpine:3.7@sha256:8c03bb07a531c53ad7d0f6e7041b64d81f99c6e493cb39abba56d956b40eacbc
+FROM alpine:3.8@sha256:621c2f39f8133acb8e64023a94dbdf0d5ca81896102b9e57c0dc184cadaf5528
 
 ### user name recognition at runtime w/ an arbitrary uid - for OpenShift deployments
 COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint
 RUN chmod u+x /usr/local/bin/uid_entrypoint && \
     chgrp 0 /usr/local/bin/uid_entrypoint && \
-    chmod g=u /etc/passwd
+    chmod g=u /usr/local/bin/uid_entrypoint /etc/passwd
 ENTRYPOINT [ "uid_entrypoint" ]
 
 ENV HUGO_VERSION=0.42.1

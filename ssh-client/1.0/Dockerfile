@@ -4,7 +4,7 @@ FROM alpine:3.8@sha256:621c2f39f8133acb8e64023a94dbdf0d5ca81896102b9e57c0dc184ca
 COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint
 RUN chmod u+x /usr/local/bin/uid_entrypoint && \
     chgrp 0 /usr/local/bin/uid_entrypoint && \
-    chmod g=u /etc/passwd
+    chmod g=u /usr/local/bin/uid_entrypoint /etc/passwd
 ### end
 
 RUN apk --no-cache add \

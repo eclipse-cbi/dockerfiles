@@ -4,12 +4,12 @@ FROM debian:sid-slim@sha256:aba719caa1074f30e390a21104b47814aa996eb8be42c1cc9a3c
 COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint
 RUN chmod u+x /usr/local/bin/uid_entrypoint && \
     chgrp 0 /usr/local/bin/uid_entrypoint && \
-    chmod g=u /etc/passwd
+    chmod g=u /usr/local/bin/uid_entrypoint /etc/passwd
 ENTRYPOINT [ "uid_entrypoint" ]
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      libgtk-3-0=3.24.1-2 \
+      libgtk-3-0=3.24.2-3 \
       tigervnc-standalone-server \
       tigervnc-common \
       metacity \
