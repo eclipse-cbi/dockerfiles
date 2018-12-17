@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN mkdir /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix
 
-ENV HOME=/home/jenkins
+ENV HOME=/home/vnc
 ENV DISPLAY :0
 
 RUN mkdir -p ${HOME}/.vnc \

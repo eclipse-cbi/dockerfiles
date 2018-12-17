@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       fonts-dejavu-extra \
     && rm -rf /var/lib/apt/lists/*
 
-ENV HOME=/home/jenkins
+ENV HOME=/home/vnc
 ENV DISPLAY :0
 
 RUN mkdir -p ${HOME}/.vnc \
