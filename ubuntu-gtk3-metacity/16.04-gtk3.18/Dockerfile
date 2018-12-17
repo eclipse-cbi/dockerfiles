@@ -33,8 +33,7 @@ RUN mkdir -p ${HOME}/.vnc \
   && chmod 600 ${HOME}/.vnc/passwd
 
 # Create a custom vnc xstartup file
-RUN echo "#!/bin/sh\n[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup\n[ -r ${HOME}/.Xresources ] && xrdb ${HOME}/.Xresources\nXvnc \$DISPLAY -geometry 1440x900 -depth 16 -dpi 100 -PasswordFile ${HOME}/.vnc/passwd &\nsleep 2\nxsetroot -solid grey\nvncconfig -iconic &\nxhost +\nmetacity --replace --sm-disable --display=\$DISPLAY &" \
-    > ${HOME}/.vnc/xstartup.sh
+COPY scripts/xstartup_metacity.sh ${HOME}/.vnc/xstartup.sh
 RUN chmod 755 ${HOME}/.vnc/xstartup.sh
 
 USER 10001
