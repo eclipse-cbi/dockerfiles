@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV HOME=/home/vnc
 ENV DISPLAY :0
 
-RUN mkdir -p ${HOME}/.vnc \
+RUN mkdir -p ${HOME}/.vnc && chmod -R 775 ${HOME} \
   && echo "123456" | vncpasswd -f > ${HOME}/.vnc/passwd \
   && chmod 600 ${HOME}/.vnc/passwd
 
