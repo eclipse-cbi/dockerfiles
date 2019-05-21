@@ -9,7 +9,7 @@ ENTRYPOINT [ "uid_entrypoint" ]
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      libgtk-3-0=3.24.2-3 \
+      libgtk-3-0 \
       tigervnc-standalone-server \
       tigervnc-common \
       metacity \
