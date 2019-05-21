@@ -1,4 +1,4 @@
-FROM debian:8.11-slim@sha256:61b250599a61111b174d937808305d1b06942c5d12acda6be9ef3612895e2450
+FROM debian:8-slim
 
 ### user name recognition at runtime w/ an arbitrary uid - for OpenShift deployments
 COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint
