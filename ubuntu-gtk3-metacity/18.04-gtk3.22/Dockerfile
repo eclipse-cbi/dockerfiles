@@ -1,4 +1,4 @@
-FROM ubuntu:18.04@sha256:29934af957c53004d7fb6340139880d23fb1952505a15d69a03af0d1418878cb
+FROM ubuntu:18.04
 
 ### user name recognition at runtime w/ an arbitrary uid - for OpenShift deployments
 COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint

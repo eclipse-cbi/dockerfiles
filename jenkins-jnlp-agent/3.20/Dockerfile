@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk8:jdk8u172-b11-alpine-slim@sha256:be98cdae8a15ee9568441d9782134216e48fd13c60865d367a6e80ba410342a2
+FROM adoptopenjdk/openjdk8:jdk8u172-b11-alpine-slim
 
 ### user name recognition at runtime w/ an arbitrary uid - for OpenShift deployments
 COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint
