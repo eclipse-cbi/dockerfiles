@@ -9,7 +9,7 @@ ENTRYPOINT [ "uid_entrypoint" ]
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      libgtk-3-0=3.14.5-1+deb8u1 \
+      libgtk-3-0=3.14.* \
       tightvncserver \
       metacity \
       x11-xserver-utils \
