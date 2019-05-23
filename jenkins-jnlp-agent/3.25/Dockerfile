@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk8:jdk8u172-b11-alpine-slim
+FROM adoptopenjdk/openjdk8:alpine-slim
 
 ### user name recognition at runtime w/ an arbitrary uid - for OpenShift deployments
 COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint

@@ -4,45 +4,20 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-#IFS=$'\n\t'
-
-push() {
-  local f=$1
-  local t=$2
-  n=0
-	until [ $n -ge 5 ]; do
-    #docker push eclipsecbi/$f:$t && break
-    echo "docker push eclipsecbi/$f:$t"
-    break
-		echo "Try #$n failed ($f:$t)... sleeping for 15 seconds"
-		n=$[$n+1]
-		sleep 15
-	done
-}
+SCRIPT_FOLDER="$(dirname $(readlink -f "${0}"))"
 
 build() {
-  local f=$1; shift;
-  local t=$1; shift;
-
-  local moretags=()
-  for tag in "$@"; do
-    moretags+=(-t eclipsecbi/$f:$tag)
-  done
-
-  docker build --pull --no-cache --rm -t eclipsecbi/$f:$t ${moretags[@]-} -f $f/$t/Dockerfile .
-  push $f $t
-
-  for tag in "$@"; do
-    push $f $tag
-  done
+  ${SCRIPT_FOLDER}/../dockertools/dockerw build_and_push "eclipsecbi/${1}" "${2}" "${1}/${2}/Dockerfile" "${SCRIPT_FOLDER}"
+  if [[ "${3:-}" = "latest" ]]; then
+    tag_latest "${1}" "${2}"
+  fi
 }
 
 tag_latest() {
   local f=$1
   local t=$2
-  #docker tag eclipsecbi/$f:$t eclipsecbi/$f:latest
-  echo "docker tag eclipsecbi/$f:$t eclipsecbi/$f:latest"
-  push $f latest
+  ${SCRIPT_FOLDER}/../dockertools/dockerw tag_alias "eclipsecbi/${f}" "${t}" "latest"
+  ${SCRIPT_FOLDER}/../dockertools/dockerw push_if_changed "eclipsecbi/${f}" "latest" "${1}/${2}/Dockerfile"
 }
 
 build debian-gtk3-metacity 8-gtk3.14

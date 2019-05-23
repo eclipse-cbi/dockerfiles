@@ -1,4 +1,4 @@
-FROM fedora:28@sha256:017eb7de7927da933a04a6c1ff59da0c41dcea194aaa6b5dd7148df286b92433
+FROM fedora:28
 
 ### user name recognition at runtime w/ an arbitrary uid - for OpenShift deployments
 COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint
