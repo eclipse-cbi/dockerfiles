@@ -31,7 +31,10 @@ pipeline {
 
   post {
     always {
-      sh 'docker logout'
+      sh '''
+        docker logout
+        ./dockertools/buildkitd stop
+      '''
       deleteDir() /* clean up workspace */
     }
   }
