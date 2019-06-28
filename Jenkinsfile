@@ -32,7 +32,6 @@ pipeline {
     always {
       sh '''
         docker logout
-        ./dockertools/buildkitd stop
       '''
       deleteDir() /* clean up workspace */
     }
