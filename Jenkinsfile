@@ -6,15 +6,14 @@ pipeline {
 
   options { 
     checkoutToSubdirectory('dockerfiles') 
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+
+  triggers {
+    cron('H H * * */3')
   }
 
   stages {
-    stage('Clone dockertools repository') {
-      steps {
-        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'dockertools']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/eclipse-cbi/dockertools.git']]]
-      }
-    }
-
     stage('Build and push images') {
       steps {
         dir('dockerfiles') {
