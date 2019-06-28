@@ -29,7 +29,6 @@ else
   git -C "${DOCKERTOOLS_PATH}" fetch --no-tags --progress --depth 1 https://github.com/eclipse-cbi/dockertools.git +refs/heads/master:refs/remotes/origin/master
   git -C "${DOCKERTOOLS_PATH}" config remote.origin.url https://github.com/eclipse-cbi/dockertools.git
   git -C "${DOCKERTOOLS_PATH}" config --add remote.origin.fetch +refs/heads/master:refs/remotes/origin/master
-  git -C "${DOCKERTOOLS_PATH}" config remote.origin.url https://github.com/eclipse-cbi/dockertools.git
   git -C "${DOCKERTOOLS_PATH}" config core.sparsecheckout true
   git -C "${DOCKERTOOLS_PATH}" config advice.detachedHead false
   git -C "${DOCKERTOOLS_PATH}" checkout -f "$(git -C "${DOCKERTOOLS_PATH}" rev-parse refs/remotes/origin/master)"
