@@ -39,7 +39,8 @@ build debian-gtk3-metacity 9-gtk3.22
 build debian-gtk3-metacity sid-gtk3.24 latest
 
 build fedora-gtk3-mutter 28-gtk3.22
-build fedora-gtk3-mutter 29-gtk3.24 latest
+build fedora-gtk3-mutter 29-gtk3.24
+build fedora-gtk3-mutter 30-gtk3.24 latest
 
 build hugo 0.42.1 latest
 
