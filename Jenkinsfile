@@ -31,6 +31,8 @@ pipeline {
           ./dockerw build fedora-gtk3-mutter 29-gtk3.24
           ./dockerw build fedora-gtk3-mutter 30-gtk3.24
 
+          ./dockerw build centos-gtk3-mutter 7.6-gtk3.22 latest
+
           ./dockerw build hugo 0.42.1
 
           ./dockerw build jenkins-jnlp-agent 3.20
