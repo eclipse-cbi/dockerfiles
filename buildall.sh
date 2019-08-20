@@ -56,3 +56,5 @@ build ubuntu-gtk3-metacity 14.04-gtk3.10
 build ubuntu-gtk3-metacity 16.04-gtk3.18
 build ubuntu-gtk3-metacity 18.04-gtk3.22
 build ubuntu-gtk3-metacity 18.10-gtk3.24 latest
+
+build centos-gtk3-mutter 7.6-gtk3.22 latest
