@@ -32,6 +32,7 @@ pipeline {
               ./dockerw build fedora-gtk3-mutter 28-gtk3.22
               ./dockerw build fedora-gtk3-mutter 29-gtk3.24
               ./dockerw build fedora-gtk3-mutter 30-gtk3.24
+              ./dockerw build fedora-gtk3-mutter 31-gtk3.24
 
               ./dockerw build centos-gtk3-mutter 7.6-gtk3.22 latest
             '''
@@ -72,7 +73,8 @@ pipeline {
 
                 ./dockerw push fedora-gtk3-mutter 28-gtk3.22
                 ./dockerw push fedora-gtk3-mutter 29-gtk3.24
-                ./dockerw push fedora-gtk3-mutter 30-gtk3.24 latest
+                ./dockerw push fedora-gtk3-mutter 30-gtk3.24
+                ./dockerw push fedora-gtk3-mutter 31-gtk3.24 latest
 
                 ./dockerw push centos-gtk3-mutter 7.6-gtk3.22 latest
               '''
