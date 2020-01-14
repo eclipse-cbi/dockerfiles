@@ -119,7 +119,7 @@ pipeline {
     always {
       sh '''
         # keep 40G of cache
-        ${DOCKERTOOLS_PATH}/bin/buildctl prune --keep-storage 40960 
+        ${DOCKERTOOLS_PATH}/buildctl prune --keep-storage 20480
         ${DOCKERTOOLS_PATH}/buildkitd stop
       '''
       
