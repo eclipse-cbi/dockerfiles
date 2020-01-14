@@ -1,5 +1,5 @@
-ARG FROM=""
-FROM ${FROM}
+ARG DISTRO=""
+FROM ${DISTRO}
 
 ### user name recognition at runtime w/ an arbitrary uid - for OpenShift deployments
 COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint

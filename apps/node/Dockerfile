@@ -6,8 +6,8 @@
 # or the MIT License which is available at https://opensource.org/licenses/MIT.
 # SPDX-License-Identifier: EPL-2.0 OR MIT
 #*******************************************************************************
-ARG FROM=""
-FROM ${FROM}
+ARG DISTRO=""
+FROM ${DISTRO}
 
 RUN mkdir /home/nodeuser && chmod 775 /home/nodeuser
 ENV HOME=/home/nodeuser
