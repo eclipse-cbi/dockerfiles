@@ -101,8 +101,8 @@ pipeline {
         stage('gtk3-wm centos+debian') {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("gtk3-wm/centos-mutter/Dockerfile", env.REPO_NAME, "centos-gtk3-metacity", "7-gtk3.22", ["FROM_TAG": "7", ])
-              buildAndPushImage("gtk3-wm/centos-mutter/Dockerfile", env.REPO_NAME, "centos-gtk3-metacity", "8-gtk3.22", ["FROM_TAG": "8", ])
+              buildAndPushImage("gtk3-wm/centos-mutter/Dockerfile", env.REPO_NAME, "centos-gtk3-mutter", "7-gtk3.22", ["FROM_TAG": "7", ])
+              buildAndPushImage("gtk3-wm/centos-mutter/Dockerfile", env.REPO_NAME, "centos-gtk3-mutter", "8-gtk3.22", ["FROM_TAG": "8", ])
 
               buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "8-gtk3.14", ["FROM_TAG": "8-slim", ])
               buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "9-gtk3.22", ["FROM_TAG": "9-slim", ])
