@@ -61,7 +61,7 @@ pipeline {
     }
     stage('Build images') {
       parallel {
-        stage('Docker image set 1') {
+        stage('Docker image set 1 (incl. adoptopenjdk)') {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
               buildAndPushImage("apps/hugo/Dockerfile", env.REPO_NAME, "hugo", "0.42.1", ["HUGO_VERSION": "0.42.1", ])
@@ -76,7 +76,7 @@ pipeline {
             }
           }
         }
-        stage('Docker image set 2') {
+        stage('gtk3-wm fedora') {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "28-gtk3.22", ["FROM_TAG": "28", ])
@@ -84,25 +84,30 @@ pipeline {
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "30-gtk3.24", ["FROM_TAG": "30", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "31-gtk3.24", ["FROM_TAG": "31", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-metacity", "rawhide-gtk3", ["FROM_TAG": "rawhide", ])
-
-              buildAndPushImage("gtk3-wm/centos-mutter/Dockerfile", env.REPO_NAME, "centos-gtk3-metacity", "7-gtk3.22", ["FROM_TAG": "7", ])
-              buildAndPushImage("gtk3-wm/centos-mutter/Dockerfile", env.REPO_NAME, "centos-gtk3-metacity", "8-gtk3.22", ["FROM_TAG": "8", ])
             }
           }
         }
-        stage('Docker image set 3') {
+        stage('gtk3-wm ubuntu') {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "8-gtk3.14", ["FROM_TAG": "8-slim", ])
-              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "9-gtk3.22", ["FROM_TAG": "9-slim", ])
-              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "10-gtk3.24", ["FROM_TAG": "10-slim", ])
-              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "sid-gtk3", ["FROM_TAG": "sid-slim", ])
-
               buildAndPushImage("gtk3-wm/ubuntu-metacity/16.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "16.04-gtk3.18", ["FROM_TAG": "16.04", ])
               buildAndPushImage("gtk3-wm/ubuntu-metacity/18.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "18.04-gtk3.18", ["FROM_TAG": "18.04", ])
               buildAndPushImage("gtk3-wm/ubuntu-metacity/18.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "18.10-gtk3.18", ["FROM_TAG": "18.10", ])
               buildAndPushImage("gtk3-wm/ubuntu-metacity/18.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "19.04-gtk3.18", ["FROM_TAG": "19.04", ])
               buildAndPushImage("gtk3-wm/ubuntu-metacity/18.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "19.10-gtk3.18", ["FROM_TAG": "19.10", ])
+            }
+          }
+        }
+        stage('gtk3-wm centos+debian') {
+          steps {
+            withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
+              buildAndPushImage("gtk3-wm/centos-mutter/Dockerfile", env.REPO_NAME, "centos-gtk3-metacity", "7-gtk3.22", ["FROM_TAG": "7", ])
+              buildAndPushImage("gtk3-wm/centos-mutter/Dockerfile", env.REPO_NAME, "centos-gtk3-metacity", "8-gtk3.22", ["FROM_TAG": "8", ])
+
+              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "8-gtk3.14", ["FROM_TAG": "8-slim", ])
+              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "9-gtk3.22", ["FROM_TAG": "9-slim", ])
+              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "10-gtk3.24", ["FROM_TAG": "10-slim", ])
+              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "sid-gtk3", ["FROM_TAG": "sid-slim", ])
             }
           }
         }
