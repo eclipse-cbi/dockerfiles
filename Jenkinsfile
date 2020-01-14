@@ -126,7 +126,7 @@ def buildAndPushLibraryImage(String dockerfile, String repo, String distroImage,
   def latestTag = tags.last()
   tags.each { tag ->
     if (tag == latestTag) {
-      buildAndPushImage(dockerfile, repo, distroImage, tag, "latest", ["DISTRO": "${distroImage}:${tag}"] + buildArgs)
+      buildAndPushImage(dockerfile, repo, distroImage, tag, true, ["DISTRO": "${distroImage}:${tag}"] + buildArgs)
     } else {
       buildAndPushImage(dockerfile, repo, distroImage, tag, ["DISTRO": "${distroImage}:${tag}"] + buildArgs)
     }
@@ -134,10 +134,10 @@ def buildAndPushLibraryImage(String dockerfile, String repo, String distroImage,
 }
 
 def buildAndPushImage(String dockerfile, String repo, String image, String tag, Map<String, String> buildArgs = [:]) {
-  buildAndPushImage(dockerfile, repo, image, tag, "", buildArgs)
+  buildAndPushImage(dockerfile, repo, image, tag, false, buildArgs)
 }
 
-def buildAndPushImage(String dockerfile, String repo, String image, String tag, String latest, Map<String, String> buildArgs = [:]) {
+def buildAndPushImage(String dockerfile, String repo, String image, String tag, boolean latest, Map<String, String> buildArgs = [:]) {
   def dockerBuildArgs = buildArgs.collect{ k, v -> "--opt \"build-arg:${k}=${v}\"" }.join(" ")
   sh """
     if [ "\${GIT_BRANCH}" = "master" ]; then
