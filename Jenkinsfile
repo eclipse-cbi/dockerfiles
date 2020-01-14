@@ -123,26 +123,27 @@ pipeline {
 }
 
 def buildAndPushLibraryImage(String dockerfile, String repo, String distroImage, List<String> tags, Map<String, String> buildArgs = [:]) {
+  def latestTag = tags.last()
   tags.each { tag ->
-    buildAndPushImage(dockerfile, repo, distroImage, tag, ["DISTRO": "${distroImage}:${tag}"] + buildArgs)
-  }
-
-  if (!tags.isEmpty()) {
-    sh """
-      docker tag "${repo}/${distroImage}:${tags.last()}" "${repo}/${distroImage}:latest"
-      if [ "\${GIT_BRANCH}" = "master" ]; then
-        \${DOCKERTOOLS_PATH}/dockerw push "${repo}/${distroImage}" "latest"
-      fi
-    """
+    if (tag == latestTag) {
+      buildAndPushImage(dockerfile, repo, distroImage, tag, "latest", ["DISTRO": "${distroImage}:${tag}"] + buildArgs)
+    } else {
+      buildAndPushImage(dockerfile, repo, distroImage, tag, ["DISTRO": "${distroImage}:${tag}"] + buildArgs)
+    }
   }
 }
 
 def buildAndPushImage(String dockerfile, String repo, String image, String tag, Map<String, String> buildArgs = [:]) {
+  buildAndPushImage(dockerfile, repo, image, tag, "", buildArgs)
+}
+
+def buildAndPushImage(String dockerfile, String repo, String image, String tag, String latest, Map<String, String> buildArgs = [:]) {
   def dockerBuildArgs = buildArgs.collect{ k, v -> "--opt \"build-arg:${k}=${v}\"" }.join(" ")
   sh """
-    \${DOCKERTOOLS_PATH}/dockerw build  "${repo}/${image}" "${tag}" "${dockerfile}" "." ${dockerBuildArgs}
     if [ "\${GIT_BRANCH}" = "master" ]; then
-      \${DOCKERTOOLS_PATH}/dockerw push "${repo}/${image}" "${tag}"
+      \${DOCKERTOOLS_PATH}/dockerw build  "${repo}/${image}" "${tag}" "${dockerfile}" "." "true" "${latest}" ${dockerBuildArgs}
+    else
+      \${DOCKERTOOLS_PATH}/dockerw build  "${repo}/${image}" "${tag}" "${dockerfile}" "." "false" "${latest}" ${dockerBuildArgs}
     fi
   """
 }
