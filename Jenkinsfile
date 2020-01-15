@@ -117,12 +117,6 @@ pipeline {
 
   post {
     always {
-      sh '''
-        # keep 40G of cache
-        ${DOCKERTOOLS_PATH}/buildctl prune 20480
-        ${DOCKERTOOLS_PATH}/buildkitd stop
-      '''
-      
       deleteDir() /* clean up workspace */
     }
   }
