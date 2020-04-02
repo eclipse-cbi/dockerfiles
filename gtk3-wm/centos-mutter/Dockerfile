@@ -1,7 +1,7 @@
 ARG FROM_TAG=""
 FROM eclipsecbi/centos:${FROM_TAG}
 
-RUN yum -y update && yum -y install \
+RUN yum -y install \
       gtk3 \
       tigervnc-server \
       tigervnc \

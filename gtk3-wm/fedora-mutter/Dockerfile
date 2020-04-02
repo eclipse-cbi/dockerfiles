@@ -1,7 +1,7 @@
 ARG FROM_TAG=""
 FROM eclipsecbi/fedora:${FROM_TAG}
 
-RUN dnf -y update && dnf -y install \
+RUN dnf -y install \
       gtk3 \
       tigervnc-server \
       tigervnc \
