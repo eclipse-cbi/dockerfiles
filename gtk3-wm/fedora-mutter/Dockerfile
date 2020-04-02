@@ -14,7 +14,7 @@ RUN dnf -y install \
       xorg-x11-fonts-100dpi \
       liberation-fonts \
       gnu-free-fonts-common \
-      dejavu-fonts-common \
+      dejavu-sans-fonts \
     && dnf clean all
 
 ENV HOME=/home/vnc
