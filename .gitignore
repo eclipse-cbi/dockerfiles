@@ -1,3 +1,4 @@
 Dockerfile.digest
 Dockerfile.buildlog
 /.dockertools
+/.project

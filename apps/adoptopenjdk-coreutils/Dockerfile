@@ -16,6 +16,7 @@ RUN apk add --no-cache \
   dumb-init \
   git \
   gnupg \
+  jq \
   openssh-client \
   rsync \
   ttf-dejavu \
