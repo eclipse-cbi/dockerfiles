@@ -43,7 +43,7 @@ pipeline {
               // 3 latest releases
               buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "debian", ["8-slim", "9-slim", "10-slim", "sid-slim", ])
               // 4 latest releases
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "fedora", ["28", "29", "30", "31", "rawhide", ])
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "fedora", ["29", "30", "31", "32", "rawhide", ])
             }
           }
         }
@@ -85,10 +85,10 @@ pipeline {
         stage('gtk3-wm fedora') {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "28-gtk3.22", ["FROM_TAG": "28", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "29-gtk3.24", ["FROM_TAG": "29", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "30-gtk3.24", ["FROM_TAG": "30", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "31-gtk3.24", ["FROM_TAG": "31", ])
+              buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "32-gtk3.24", ["FROM_TAG": "32", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "rawhide-gtk3", ["FROM_TAG": "rawhide", ])
             }
           }
