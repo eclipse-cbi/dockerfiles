@@ -67,6 +67,7 @@ pipeline {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
               buildAndPushImage("apps/hugo/Dockerfile", env.REPO_NAME, "hugo", "0.42.1", ["HUGO_VERSION": "0.42.1", ])
               buildAndPushImage("apps/hugo/Dockerfile", env.REPO_NAME, "hugo", "0.58.3", ["HUGO_VERSION": "0.58.3", ])
+              buildAndPushImage("apps/hugo/Dockerfile", env.REPO_NAME, "hugo", "0.78.1", ["HUGO_VERSION": "0.78.1", ])
               buildAndPushImage("apps/openssh-client/Dockerfile", env.REPO_NAME, "ssh-client", "1.0")
 
               buildAndPushImage("apps/adoptopenjdk/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk8-alpine-slim", ["FROM_IMAGE": "openjdk8", "FROM_TAG": "jdk8u262-b10-alpine-slim", ])
