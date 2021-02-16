@@ -71,8 +71,8 @@ pipeline {
               buildAndPushImage("apps/hugo_extended/Dockerfile", env.REPO_NAME, "hugo_extended", "0.78.1", ["HUGO_VERSION": "0.78.1", ])
               buildAndPushImage("apps/openssh-client/Dockerfile", env.REPO_NAME, "ssh-client", "1.0")
 
-              buildAndPushImage("apps/adoptopenjdk/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk8-alpine-slim", ["FROM_IMAGE": "openjdk8", "FROM_TAG": "jdk8u262-b10-alpine-slim", ])
-              buildAndPushImage("apps/adoptopenjdk/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk8-openj9-alpine-slim", ["FROM_IMAGE": "openjdk8-openj9", "FROM_TAG": "jdk8u262-b10_openj9-0.21.0-alpine-slim", ])
+              buildAndPushImage("apps/adoptopenjdk/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk8-alpine-slim", ["FROM_IMAGE": "openjdk8", "FROM_TAG": "alpine-slim", ])
+              buildAndPushImage("apps/adoptopenjdk/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk8-openj9-alpine-slim", ["FROM_IMAGE": "openjdk8-openj9", "FROM_TAG": "alpine-slim", ])
 
               buildAndPushImage("apps/adoptopenjdk/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk11-alpine-slim", ["FROM_IMAGE": "openjdk11", "FROM_TAG": "alpine-slim", ])
               buildAndPushImage("apps/adoptopenjdk/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk11-openj9-alpine-slim", ["FROM_IMAGE": "openjdk11-openj9", "FROM_TAG": "alpine-slim", ])
