@@ -76,7 +76,7 @@ pipeline {
 
               buildAndPushImage("apps/adoptopenjdk/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk11-alpine-slim", ["FROM_IMAGE": "openjdk11", "FROM_TAG": "alpine-slim", ])
               buildAndPushImage("apps/adoptopenjdk/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk11-openj9-alpine-slim", ["FROM_IMAGE": "openjdk11-openj9", "FROM_TAG": "alpine-slim", ])
-              buildAndPushImage("apps/adoptopenjdk/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk11-openj9-0.23.0-alpine-slim", ["FROM_IMAGE": "openjdk11-openj9", "FROM_TAG": "openj9-0.23.0-alpine-slim", ])
+              buildAndPushImage("apps/adoptopenjdk/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk11-openj9-0.23.0-alpine-slim", ["FROM_IMAGE": "openjdk11-openj9", "FROM_TAG": "jdk-11.0.9_11_openj9-0.23.0-alpine-slim", ])
 
               buildAndPushImage("apps/adoptopenjdk-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk8-alpine-slim", ["FROM_TAG": "openjdk8-alpine-slim", ])
               buildAndPushImage("apps/adoptopenjdk-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk8-openj9-alpine-slim", ["FROM_TAG": "openjdk8-openj9-alpine-slim", ])
