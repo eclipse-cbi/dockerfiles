@@ -31,20 +31,20 @@ pipeline {
         stage("Docker library image set 1") {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              // 4 latest releases
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "alpine", ["3.10", "3.11", "3.12", "3.13", ])
-              // 2 latest major
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "centos", ["6", "7.4.1708", "7.5.1804", "7.6.1810", "7.7.1908", "7", "8", ])
+              // 4 latest releases + edge
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "alpine", ["3.10", "3.11", "3.12", "3.13", "edge", ])
+              // 2 latest majors
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "centos", ["7", "8", ])
             }
           }
         }
         stage("Docker library image set 2") {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              // 3 latest releases
+              // 3 latest releases + sid
               buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "debian", ["8-slim", "9-slim", "10-slim", "sid-slim", ])
-              // 4 latest releases
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "fedora", ["30", "31", "32", "33", "rawhide", ])
+              // 3 latest releases + rawhide
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "fedora", ["31", "32", "33", "rawhide", ])
             }
           }
         }
@@ -52,9 +52,9 @@ pipeline {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
               // 2 latest LTS + latest release (lts or)
-              buildAndPushLibraryImage("apps/node/Dockerfile", env.REPO_NAME, "node", ["10-alpine", "12-alpine", "13-alpine"])
+              buildAndPushLibraryImage("apps/node/Dockerfile", env.REPO_NAME, "node", ["12-alpine", "14-alpine", "15-alpine"])
               // 2 latest LTS + all releases since latest LTS
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "ubuntu", ["16.04", "18.04", "18.10", "19.04", "19.10", ])
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "ubuntu", ["18.04", "20.04", "20.10"])
             }
           }
         }
@@ -65,11 +65,8 @@ pipeline {
         stage('Docker image set 1 (incl. adoptopenjdk)') {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("apps/hugo/Dockerfile", env.REPO_NAME, "hugo", "0.42.1", ["HUGO_VERSION": "0.42.1", ])
-              buildAndPushImage("apps/hugo/Dockerfile", env.REPO_NAME, "hugo", "0.58.3", ["HUGO_VERSION": "0.58.3", ])
-              buildAndPushImage("apps/hugo/Dockerfile", env.REPO_NAME, "hugo", "0.78.1", ["HUGO_VERSION": "0.78.1", ])
-              buildAndPushImage("apps/hugo_extended/Dockerfile", env.REPO_NAME, "hugo_extended", "0.78.1", ["HUGO_VERSION": "0.78.1", ])
-              buildAndPushImage("apps/openssh-client/Dockerfile", env.REPO_NAME, "ssh-client", "1.0")
+              buildAndPushImage("apps/hugo/Dockerfile", env.REPO_NAME, "hugo", "0.81.0", ["HUGO_VERSION": "0.81.0", ])
+              buildAndPushImage("apps/hugo_extended/Dockerfile", env.REPO_NAME, "hugo_extended", "0.81.0", ["HUGO_VERSION": "0.81.0", ])
 
               buildAndPushImage("apps/adoptopenjdk/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk8-alpine-slim", ["FROM_IMAGE": "openjdk8", "FROM_TAG": "alpine-slim", ])
               buildAndPushImage("apps/adoptopenjdk/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk8-openj9-alpine-slim", ["FROM_IMAGE": "openjdk8-openj9", "FROM_TAG": "alpine-slim", ])
@@ -90,7 +87,6 @@ pipeline {
         stage('gtk3-wm fedora') {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "30-gtk3.24", ["FROM_TAG": "30", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "31-gtk3.24", ["FROM_TAG": "31", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "32-gtk3.24", ["FROM_TAG": "32", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "33-gtk3.24", ["FROM_TAG": "33", ])
@@ -101,11 +97,9 @@ pipeline {
         stage('gtk3-wm ubuntu') {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("gtk3-wm/ubuntu-metacity/16.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "16.04-gtk3.18", ["FROM_TAG": "16.04", ])
               buildAndPushImage("gtk3-wm/ubuntu-metacity/18.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "18.04-gtk3.18", ["FROM_TAG": "18.04", ])
-              buildAndPushImage("gtk3-wm/ubuntu-metacity/18.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "18.10-gtk3.18", ["FROM_TAG": "18.10", ])
-              buildAndPushImage("gtk3-wm/ubuntu-metacity/18.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "19.04-gtk3.18", ["FROM_TAG": "19.04", ])
-              buildAndPushImage("gtk3-wm/ubuntu-metacity/18.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "19.10-gtk3.18", ["FROM_TAG": "19.10", ])
+              buildAndPushImage("gtk3-wm/ubuntu-metacity/18.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "20.04-gtk3.24", ["FROM_TAG": "20.04", ])
+              buildAndPushImage("gtk3-wm/ubuntu-metacity/18.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "20.10-gtk3.24", ["FROM_TAG": "20.10", ])
             }
           }
         }
