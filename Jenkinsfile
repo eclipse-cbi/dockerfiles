@@ -107,9 +107,9 @@ pipeline {
         stage('gtk3-wm ubuntu') {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("gtk3-wm/ubuntu-metacity/18.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "18.04-gtk3.18", ["FROM_TAG": "18.04", ])
-              buildAndPushImage("gtk3-wm/ubuntu-metacity/18.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "20.04-gtk3.24", ["FROM_TAG": "20.04", ])
-              buildAndPushImage("gtk3-wm/ubuntu-metacity/18.04/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "20.10-gtk3.24", ["FROM_TAG": "20.10", ])
+              buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "18.04-gtk3.18", ["FROM_TAG": "18.04", ])
+              buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "20.04-gtk3.24", ["FROM_TAG": "20.04", ])
+              buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "20.10-gtk3.24", ["FROM_TAG": "20.10", ])
             }
           }
         }
