@@ -44,7 +44,7 @@ pipeline {
               // 3 latest releases + sid
               buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "debian", ["8-slim", "9-slim", "10-slim", "sid-slim", ])
               // 3 latest releases + rawhide
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "fedora", ["31", "32", "33", "rawhide", ])
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "fedora", ["32", "33", "34", "rawhide", ])
             }
           }
         }
@@ -54,7 +54,7 @@ pipeline {
               // 2 latest LTS + latest release (lts or)
               buildAndPushLibraryImage("apps/node/Dockerfile", env.REPO_NAME, "node", ["12-alpine", "14-alpine", "15-alpine"])
               // 2 latest LTS + all releases since latest LTS
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "ubuntu", ["18.04", "20.04", "20.10"])
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "ubuntu", ["18.04", "20.04", "20.10", "21.04"])
             }
           }
         }
@@ -97,10 +97,10 @@ pipeline {
         stage('gtk3-wm fedora') {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "31-gtk3.24", ["FROM_TAG": "31", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "32-gtk3.24", ["FROM_TAG": "32", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "33-gtk3.24", ["FROM_TAG": "33", ])
-              buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "rawhide-gtk3", ["FROM_TAG": "rawhide", ])
+              buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "34-gtk3.24", ["FROM_TAG": "34", ])
+              buildAndPushImage("gtk3-wm/fedora-mutter/rawhide/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "rawhide-gtk3", ["FROM_TAG": "rawhide", ])
             }
           }
         }
@@ -110,6 +110,7 @@ pipeline {
               buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "18.04-gtk3.18", ["FROM_TAG": "18.04", ])
               buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "20.04-gtk3.24", ["FROM_TAG": "20.04", ])
               buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "20.10-gtk3.24", ["FROM_TAG": "20.10", ])
+              buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "21.04-gtk3.24", ["FROM_TAG": "21.04", ])
             }
           }
         }
