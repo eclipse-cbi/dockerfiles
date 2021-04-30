@@ -32,7 +32,7 @@ pipeline {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
               // 4 latest releases + edge
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "alpine", ["3.10", "3.11", "3.12", "3.13", "edge", ])
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "alpine", ["edge", "3.10", "3.11", "3.12", "3.13", ])
               // 2 latest majors
               buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "centos", ["7", "8", ])
             }
@@ -42,9 +42,9 @@ pipeline {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
               // 3 latest releases + sid
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "debian", ["8-slim", "9-slim", "10-slim", "sid-slim", ])
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "debian", [ "sid-slim", "8-slim", "9-slim", "10-slim", ])
               // 3 latest releases + rawhide
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "fedora", ["32", "33", "34", "rawhide", ])
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "fedora", ["rawhide", "32", "33", "34", ])
             }
           }
         }
