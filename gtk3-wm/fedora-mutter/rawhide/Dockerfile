@@ -16,10 +16,8 @@ RUN dnf -y install \
       xmodmap \
       xrandr \
       xrdb \
-      xrefresh \
       xset \
       xsetroot \
-      xstdcmap \
       mesa-libGL \
       xorg-x11-fonts-misc \
       xorg-x11-fonts-75dpi \
