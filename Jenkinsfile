@@ -68,6 +68,8 @@ pipeline {
               buildAndPushImage("apps/hugo/Dockerfile", env.REPO_NAME, "hugo", "0.81.0", ["HUGO_VERSION": "0.81.0", ])
               buildAndPushImage("apps/hugo_extended/Dockerfile", env.REPO_NAME, "hugo_extended", "0.81.0", ["HUGO_VERSION": "0.81.0", ])
 
+              buildAndPushImage("apps/ci-admin/openssh/Dockerfile", env.REPO_NAME, "openssh", "8.8_p1-r1", ["FROM_TAG": "3.15", "OPENSSH_VERSION": "8.8_p1-r1", ])
+
               buildAndPushImage("apps/adoptopenjdk-alpine/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk8-alpine-slim", ["FROM_IMAGE": "openjdk8", "FROM_TAG": "alpine-slim", ])
               buildAndPushImage("apps/adoptopenjdk-alpine/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk8-openj9-alpine-slim", ["FROM_IMAGE": "openjdk8-openj9", "FROM_TAG": "alpine-slim", ])
 
