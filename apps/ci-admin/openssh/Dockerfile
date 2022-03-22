@@ -8,7 +8,7 @@ ENV OPENSSH_VERSION=${OPENSSH_VERSION}
 
 RUN apk --no-cache add openssh=${OPENSSH_VERSION}
 
-COPY uid_entrypoint /usr/local/bin
+COPY scripts/uid_entrypoint /usr/local/bin
 RUN chgrp 0 /etc/passwd && chmod g+rw /etc/passwd && \
   chgrp 0 /usr/local/bin/uid_entrypoint && chmod g+rx /usr/local/bin/uid_entrypoint
 
