@@ -54,7 +54,7 @@ pipeline {
               // 2 latest LTS + latest release (lts or)
               buildAndPushLibraryImage("apps/node/Dockerfile", env.REPO_NAME, "node", ["12-alpine", "14-alpine", "15-alpine"])
               // 2 latest LTS + all releases since latest LTS
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "ubuntu", ["18.04", "20.04", "20.10", "21.04"])
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "ubuntu", ["18.04", "20.04", "20.10", "21.04", "22.04"])
             }
           }
         }
@@ -113,6 +113,7 @@ pipeline {
               buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "20.04-gtk3.24", ["FROM_TAG": "20.04", ])
               buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "20.10-gtk3.24", ["FROM_TAG": "20.10", ])
               buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "21.04-gtk3.24", ["FROM_TAG": "21.04", ])
+              buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "22.04-gtk3.24", ["FROM_TAG": "22.04", ])
             }
           }
         }
