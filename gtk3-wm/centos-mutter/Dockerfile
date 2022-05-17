@@ -1,5 +1,10 @@
 ARG FROM_TAG=""
 FROM eclipsecbi/centos:${FROM_TAG}
+ARG FROM_TAG
+
+# CentOS 8 mirrors moved to vault.centos.org after EOL on Dec 31st, 2021
+RUN if [[ "${FROM_TAG}" == "8" ]]; then sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* \
+  && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*; fi
 
 RUN yum -y install \
       gtk3 \
