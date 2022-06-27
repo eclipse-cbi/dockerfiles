@@ -21,6 +21,7 @@ pipeline {
   stages {
     stage('Get dockertools') {
       steps {
+        readTrusted './fetch_dockertools'
         sh '''
           ./fetch_dockertools
         '''
