@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       libgtk-3-0 \
       tigervnc-standalone-server \
       tigervnc-common \
+      tightvnc \
       metacity \
       x11-xserver-utils \
       libgl1-mesa-dri \
