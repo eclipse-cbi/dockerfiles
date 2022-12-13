@@ -102,6 +102,7 @@ pipeline {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "35-gtk3.24", ["FROM_TAG": "35", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "36-gtk3.24", ["FROM_TAG": "36", ])
+              buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "37-gtk3.24", ["FROM_TAG": "37", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/rawhide/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "rawhide-gtk3", ["FROM_TAG": "rawhide", ])
             }
           }
