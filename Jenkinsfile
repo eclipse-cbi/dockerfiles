@@ -94,6 +94,9 @@ pipeline {
 
               buildAndPushImage("apps/adoptopenjdk-debian-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk11-debian-slim", ["FROM_TAG": "openjdk11-debian-slim", ])
               buildAndPushImage("apps/adoptopenjdk-debian-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk11-openj9-debian-slim", ["FROM_TAG": "openjdk11-openj9-debian-slim", ])
+
+              buildAndPushImage("apps/semeru-ubuntu/Dockerfile", env.REPO_NAME, "semeru-ubuntu", "openjdk11-jammy", ["FROM_IMAGE": "ibm-semeru-runtimes", "FROM_TAG": "open-11-jdk-jammy", ])
+              buildAndPushImage("apps/semeru-ubuntu-coreutils/Dockerfile", env.REPO_NAME, "semeru-ubuntu-coreutils", "openjdk11-jammy", ["FROM_TAG": "openjdk11-jammy", ])
             }
           }
         }
