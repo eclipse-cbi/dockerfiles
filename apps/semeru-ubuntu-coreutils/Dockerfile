@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   jq \
   openssh-client \
   rsync \
-  ttf-dejavu \
+  fonts-dejavu \
   unzip \
   wget \
   zip
