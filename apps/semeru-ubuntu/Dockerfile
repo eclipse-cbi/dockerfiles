@@ -8,7 +8,7 @@
 #*******************************************************************************
 ARG FROM_IMAGE=""
 ARG FROM_TAG=""
-FROM ibm-semeru-runtimes/${FROM_IMAGE}:${FROM_TAG}
+FROM ${FROM_IMAGE}:${FROM_TAG}
 
 ### user name recognition at runtime w/ an arbitrary uid - for OpenShift deployments
 COPY scripts/uid_entrypoint /usr/local/bin/uid_entrypoint
