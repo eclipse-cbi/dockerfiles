@@ -9,7 +9,10 @@
 ARG FROM_TAG=""
 FROM eclipsecbi/semeru-ubuntu:${FROM_TAG}
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y software-properties-common \
+  && add-apt-repository -y ppa:git-core/ppa
+
+RUN apt-get upgrade -y && apt-get install -y --no-install-recommends \
   bash \
   coreutils \
   curl \
