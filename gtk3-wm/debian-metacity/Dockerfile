@@ -2,7 +2,7 @@ ARG FROM_TAG=""
 FROM eclipsecbi/debian:${FROM_TAG}
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --force-yes --no-install-recommends \
       libgtk-3-0 \
       tightvncserver \
       metacity \
