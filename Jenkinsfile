@@ -4,9 +4,9 @@ pipeline {
     label 'docker-build'
   }
 
-  options { 
+  options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
-    timeout(time: 90, unit: 'MINUTES') 
+    timeout(time: 90, unit: 'MINUTES')
   }
 
   environment {
@@ -79,7 +79,7 @@ pipeline {
 
               buildAndPushImage("apps/adoptopenjdk-alpine-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk8-alpine-slim", ["FROM_TAG": "openjdk8-alpine-slim", ])
               buildAndPushImage("apps/adoptopenjdk-alpine-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk8-openj9-alpine-slim", ["FROM_TAG": "openjdk8-openj9-alpine-slim", ])
-              
+
               buildAndPushImage("apps/adoptopenjdk-alpine-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk11-alpine-slim", ["FROM_TAG": "openjdk11-alpine-slim", ])
               buildAndPushImage("apps/adoptopenjdk-alpine-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk11-openj9-alpine-slim", ["FROM_TAG": "openjdk11-openj9-alpine-slim", ])
 
@@ -95,6 +95,19 @@ pipeline {
               buildAndPushImage("apps/adoptopenjdk-debian-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk11-debian-slim", ["FROM_TAG": "openjdk11-debian-slim", ])
               buildAndPushImage("apps/adoptopenjdk-debian-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk11-openj9-debian-slim", ["FROM_TAG": "openjdk11-openj9-debian-slim", ])
 
+              /* Temurin */
+              buildAndPushImage("apps/eclipse-temurin-alpine/Dockerfile", env.REPO_NAME, "eclipse-temurin", "8-alpine", ["FROM_IMAGE": "eclipse-temurin", "FROM_TAG": "8-alpine", ])
+              buildAndPushImage("apps/eclipse-temurin-alpine/Dockerfile", env.REPO_NAME, "eclipse-temurin", "11-alpine", ["FROM_IMAGE": "eclipse-temurin", "FROM_TAG": "11-alpine", ])
+              buildAndPushImage("apps/eclipse-temurin-alpine-coreutils/Dockerfile", env.REPO_NAME, "eclipse-temurin-coreutils", "8-alpine", ["FROM_TAG": "8-alpine", ])
+              buildAndPushImage("apps/eclipse-temurin-alpine-coreutils/Dockerfile", env.REPO_NAME, "eclipse-temurin-coreutils", "11-alpine", ["FROM_TAG": "11-alpine", ])
+              buildAndPushImage("apps/eclipse-temurin-ubuntu/Dockerfile", env.REPO_NAME, "eclipse-temurin", "8-ubuntu", ["FROM_IMAGE": "8", "FROM_TAG": "ubuntu", ])
+              buildAndPushImage("apps/eclipse-temurin-ubuntu/Dockerfile", env.REPO_NAME, "eclipse-temurin", "11-ubuntu", ["FROM_IMAGE": "11", "FROM_TAG": "ubuntu", ])
+              buildAndPushImage("apps/eclipse-temurin-ubuntu-coreutils/Dockerfile", env.REPO_NAME, "eclipse-temurin-coreutils", "8-ubuntu", ["FROM_TAG": "8-ubuntu", ])
+              buildAndPushImage("apps/eclipse-temurin-ubuntu-coreutils/Dockerfile", env.REPO_NAME, "eclipse-temurin-coreutils", "11-ubuntu", ["FROM_TAG": "11-ubuntu", ])
+              /* eo Temurin */
+
+              buildAndPushImage("apps/semeru-ubuntu/Dockerfile", env.REPO_NAME, "semeru-ubuntu", "openjdk8-jammy", ["FROM_IMAGE": "ibm-semeru-runtimes", "FROM_TAG": "open-8-jdk-jammy", ])
+              buildAndPushImage("apps/semeru-ubuntu-coreutils/Dockerfile", env.REPO_NAME, "semeru-ubuntu-coreutils", "openjdk8-jammy", ["FROM_TAG": "openjdk8-jammy", ])
               buildAndPushImage("apps/semeru-ubuntu/Dockerfile", env.REPO_NAME, "semeru-ubuntu", "openjdk11-jammy", ["FROM_IMAGE": "ibm-semeru-runtimes", "FROM_TAG": "open-11-jdk-jammy", ])
               buildAndPushImage("apps/semeru-ubuntu-coreutils/Dockerfile", env.REPO_NAME, "semeru-ubuntu-coreutils", "openjdk11-jammy", ["FROM_TAG": "openjdk11-jammy", ])
             }
@@ -124,7 +137,7 @@ pipeline {
               buildAndPushImage("gtk3-wm/centos-mutter/Dockerfile", env.REPO_NAME, "centos-gtk3-mutter", "7-gtk3.22", ["FROM_TAG": "7", ])
               buildAndPushImage("gtk3-wm/centos-mutter/Dockerfile", env.REPO_NAME, "centos-gtk3-mutter", "8-gtk3.22", ["FROM_TAG": "8", ])
 
-              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "8-gtk3.14", ["FROM_TAG": "8-slim", ])
+              //buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "8-gtk3.14", ["FROM_TAG": "8-slim", ])
               buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "9-gtk3.22", ["FROM_TAG": "9-slim", ])
               buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "10-gtk3.24", ["FROM_TAG": "10-slim", ])
               buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "sid-gtk3", ["FROM_TAG": "sid-slim", ])
