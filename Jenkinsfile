@@ -33,7 +33,7 @@ pipeline {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
               // 4 latest releases + edge
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "alpine", ["edge", "3.10", "3.11", "3.12", "3.13", ])
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "alpine", ["edge", "3.16", "3.17", "3.18", ])
               // 2 latest majors
               buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "centos", ["7", "8", ])
             }
