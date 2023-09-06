@@ -14,7 +14,7 @@ COPY --from=builder hugo /usr/local/bin/hugo
 # Install glibc: This is required for HUGO-extended (including SASS) to work.
 # https://github.com/dettmering/hugo-build/blob/6c68088f1dc2f1fcccc7edffba9e78dcc4b2fc93/Dockerfile
 
-ENV GLIBC_VERSION 2.27-r0
+ENV GLIBC_VERSION 2.35-r1
 
 RUN set -x && \
   apk add --update wget ca-certificates libstdc++
