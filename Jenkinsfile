@@ -32,28 +32,26 @@ pipeline {
         stage("Docker library image set 1") {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              // 4 latest releases + edge
+              // 3 latest releases + edge (https://hub.docker.com/_/alpine)
               buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "alpine", ["edge", "3.16", "3.17", "3.18", ])
-              // 2 latest majors
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "centos", ["7", "8", ])
             }
           }
         }
         stage("Docker library image set 2") {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              // 3 latest releases + sid
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "debian", [ "sid-slim", "10-slim", "11-slim" ])
-              // 3 latest releases + rawhide
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "fedora", ["rawhide", "36", "37", "38" ])
+              // 3 latest releases (https://hub.docker.com/_/debian/)
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "debian", [ "10-slim", "11-slim", "12-slim" ])
+              // 3 latest releases + rawhide (https://hub.docker.com/_/fedora/)
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "fedora", ["rawhide", "37", "38", "39" ])
             }
           }
         }
         stage("Docker library image set 3") {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              // 2 latest LTS + latest release (lts or)
-              buildAndPushLibraryImage("apps/node/Dockerfile", env.REPO_NAME, "node", ["12-alpine", "14-alpine", "15-alpine"])
+              // 2 latest LTS https://hub.docker.com/_/node)
+              buildAndPushLibraryImage("apps/node/Dockerfile", env.REPO_NAME, "node", ["18-alpine", "20-alpine"])
               // 2 latest LTS + all releases since latest LTS
               buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "ubuntu", ["18.04", "20.04", "20.10", "21.04"])
             }
@@ -110,6 +108,8 @@ pipeline {
               buildAndPushImage("apps/semeru-ubuntu-coreutils/Dockerfile", env.REPO_NAME, "semeru-ubuntu-coreutils", "openjdk8-jammy", ["FROM_TAG": "openjdk8-jammy", ])
               buildAndPushImage("apps/semeru-ubuntu/Dockerfile", env.REPO_NAME, "semeru-ubuntu", "openjdk11-jammy", ["FROM_IMAGE": "ibm-semeru-runtimes", "FROM_TAG": "open-11-jdk-jammy", ])
               buildAndPushImage("apps/semeru-ubuntu-coreutils/Dockerfile", env.REPO_NAME, "semeru-ubuntu-coreutils", "openjdk11-jammy", ["FROM_TAG": "openjdk11-jammy", ])
+              buildAndPushImage("apps/semeru-ubuntu/Dockerfile", env.REPO_NAME, "semeru-ubuntu", "openjdk17-jammy", ["FROM_IMAGE": "ibm-semeru-runtimes", "FROM_TAG": "open-17-jdk-jammy", ])
+              buildAndPushImage("apps/semeru-ubuntu-coreutils/Dockerfile", env.REPO_NAME, "semeru-ubuntu-coreutils", "openjdk17-jammy", ["FROM_TAG": "openjdk17-jammy", ])
             }
           }
         }
