@@ -116,9 +116,9 @@ pipeline {
         stage('gtk3-wm fedora') {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "36-gtk3.24", ["FROM_TAG": "36", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "37-gtk3.24", ["FROM_TAG": "37", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "38-gtk3.24", ["FROM_TAG": "38", ])
+              buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "39-gtk3.24", ["FROM_TAG": "39", ])
               buildAndPushImage("gtk3-wm/fedora-mutter/rawhide/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "rawhide-gtk3", ["FROM_TAG": "rawhide", ])
             }
           }
@@ -131,15 +131,12 @@ pipeline {
             }
           }
         }
-        stage('gtk3-wm centos+debian') {
+        stage('gtk3-wm debian') {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("gtk3-wm/centos-mutter/Dockerfile", env.REPO_NAME, "centos-gtk3-mutter", "7-gtk3.22", ["FROM_TAG": "7", ])
-              buildAndPushImage("gtk3-wm/centos-mutter/Dockerfile", env.REPO_NAME, "centos-gtk3-mutter", "8-gtk3.22", ["FROM_TAG": "8", ])
-
               buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "10-gtk3.24", ["FROM_TAG": "10-slim", ])
               buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "11-gtk3.24", ["FROM_TAG": "11-slim", ])
-              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "sid-gtk3", ["FROM_TAG": "sid-slim", ])
+              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "12-gtk3.24", ["FROM_TAG": "12-slim", ])
             }
           }
         }
