@@ -53,7 +53,7 @@ pipeline {
               // 2 latest LTS https://hub.docker.com/_/node)
               buildAndPushLibraryImage("apps/node/Dockerfile", env.REPO_NAME, "node", ["18-alpine", "20-alpine"])
               // 2 latest LTS + all releases since latest LTS
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "ubuntu", ["18.04", "20.04", "22.04"])
+              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "ubuntu", ["20.04", "22.04"])
             }
           }
         }
@@ -126,7 +126,6 @@ pipeline {
         stage('gtk3-wm ubuntu') {
           steps {
             withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "18.04-gtk3.18", ["FROM_TAG": "18.04", ])
               buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "20.04-gtk3.24", ["FROM_TAG": "20.04", ])
               buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "22.04-gtk3.24", ["FROM_TAG": "22.04", ])
             }
