@@ -1,7 +1,12 @@
-pipeline {
+@Library('releng-pipeline@main') _
 
+pipeline {
   agent {
-    label 'docker-build'
+    kubernetes {
+      yaml loadOverridableResource(
+        libraryResource: 'org/eclipsefdn/container/agent.yml'
+      )
+    }
   }
 
   options {
@@ -10,8 +15,9 @@ pipeline {
   }
 
   environment {
-    REPO_NAME = "eclipsecbi"
-    DOCKERTOOLS_PATH = sh(script: "printf ${env.WORKSPACE}/.dockertools", returnStdout: true)
+    HOME = '${env.WORKSPACE}'
+    NAMESPACE = 'eclipsecbi'
+    CREDENTIALS_ID = 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9'
   }
 
   triggers {
@@ -19,127 +25,86 @@ pipeline {
   }
 
   stages {
-    stage('Get dockertools') {
+    stage('Build Library Image') {
       steps {
-        readTrusted './fetch_dockertools'
-        sh '''
-          ./fetch_dockertools
-        '''
+        buildLibraryImage('alpine', ['edge', '3.16', '3.17', '3.18'])
+        buildLibraryImage('debian', ['10-slim', '11-slim', '12-slim'])
+        buildLibraryImage('fedora', ['rawhide', '37', '38', '39'])
+        buildLibraryImage('ubuntu', ['20.04', '22.04'])
+        buildLibraryImage('node', ['18-alpine', '20-alpine'], 'apps/node/Dockerfile')
       }
     }
-    stage('Build images variants from Docker Library') {
-      parallel {
-        stage("Docker library image set 1") {
-          steps {
-            withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              // 3 latest releases + edge (https://hub.docker.com/_/alpine)
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "alpine", ["edge", "3.16", "3.17", "3.18", ])
-            }
-          }
-        }
-        stage("Docker library image set 2") {
-          steps {
-            withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              // 3 latest releases (https://hub.docker.com/_/debian/)
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "debian", [ "10-slim", "11-slim", "12-slim" ])
-              // 3 latest releases + rawhide (https://hub.docker.com/_/fedora/)
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "fedora", ["rawhide", "37", "38", "39" ])
-            }
-          }
-        }
-        stage("Docker library image set 3") {
-          steps {
-            withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              // 2 latest LTS https://hub.docker.com/_/node)
-              buildAndPushLibraryImage("apps/node/Dockerfile", env.REPO_NAME, "node", ["18-alpine", "20-alpine"])
-              // 2 latest LTS + all releases since latest LTS
-              buildAndPushLibraryImage("distros/Dockerfile", env.REPO_NAME, "ubuntu", ["20.04", "22.04"])
-            }
-          }
-        }
+    stage('Build Images hugo') {
+      steps {
+        buildImage('hugo', '0.81.0', 'apps/hugo/Dockerfile', ['HUGO_VERSION': '0.81.0'])
+        buildImage('hugo_extended', '0.81.0', 'apps/hugo_extended/Dockerfile', ['HUGO_VERSION': '0.81.0'])
       }
     }
-    stage('Build images') {
-      parallel {
-        stage('Docker image set 1 (incl. adoptopenjdk)') {
-          steps {
-            withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("apps/hugo/Dockerfile", env.REPO_NAME, "hugo", "0.81.0", ["HUGO_VERSION": "0.81.0", ])
-              buildAndPushImage("apps/hugo_extended/Dockerfile", env.REPO_NAME, "hugo_extended", "0.81.0", ["HUGO_VERSION": "0.81.0", ])
+    stage('Build Image openssh') {
+      steps {
+        buildImage('openssh', '8.8_p1-r1', 'apps/ci-admin/openssh/Dockerfile', ['FROM_TAG': '3.15', 'OPENSSH_VERSION': '8.8_p1-r1'])
+      }
+    }
+    stage('Build Images adoptopenjdk') {
+      steps {
+        // alpine 
+        buildImage('adoptopenjdk', 'openjdk8-alpine-slim', 'apps/adoptopenjdk-alpine/Dockerfile', ['FROM_IMAGE': 'openjdk8', 'FROM_TAG': 'alpine-slim'])
+        buildImage('adoptopenjdk', 'openjdk8-openj9-alpine-slim', 'apps/adoptopenjdk-alpine/Dockerfile', ['FROM_IMAGE': 'openjdk8-openj9', 'FROM_TAG': 'alpine-slim'])
+        buildImage('adoptopenjdk', 'openjdk11-alpine-slim', 'apps/adoptopenjdk-alpine/Dockerfile', ['FROM_IMAGE': 'openjdk11', 'FROM_TAG': 'alpine-slim'])
+        buildImage('adoptopenjdk', 'openjdk11-openj9-alpine-slim', 'apps/adoptopenjdk-alpine/Dockerfile', ['FROM_IMAGE': 'openjdk11-openj9', 'FROM_TAG': 'alpine-slim'])
 
-              buildAndPushImage("apps/ci-admin/openssh/Dockerfile", env.REPO_NAME, "openssh", "8.8_p1-r1", ["FROM_TAG": "3.15", "OPENSSH_VERSION": "8.8_p1-r1", ])
+        buildImage('adoptopenjdk-coreutils', 'openjdk8-alpine-slim', 'apps/adoptopenjdk-alpine-coreutils/Dockerfile', ['FROM_TAG': 'openjdk8-alpine-slim'])
+        buildImage('adoptopenjdk-coreutils', 'openjdk8-openj9-alpine-slim', 'apps/adoptopenjdk-alpine-coreutils/Dockerfile', ['FROM_TAG': 'openjdk8-openj9-alpine-slim'])
+        buildImage('adoptopenjdk-coreutils', 'openjdk11-alpine-slim', 'apps/adoptopenjdk-alpine-coreutils/Dockerfile', ['FROM_TAG': 'openjdk11-alpine-slim'])
+        buildImage('adoptopenjdk-coreutils', 'openjdk11-openj9-alpine-slim', 'apps/adoptopenjdk-alpine-coreutils/Dockerfile', ['FROM_TAG': 'openjdk11-openj9-alpine-slim'])
 
-              buildAndPushImage("apps/adoptopenjdk-alpine/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk8-alpine-slim", ["FROM_IMAGE": "openjdk8", "FROM_TAG": "alpine-slim", ])
-              buildAndPushImage("apps/adoptopenjdk-alpine/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk8-openj9-alpine-slim", ["FROM_IMAGE": "openjdk8-openj9", "FROM_TAG": "alpine-slim", ])
+        // debian 
+        buildImage('adoptopenjdk', 'openjdk8-debian-slim', 'apps/adoptopenjdk-debian/Dockerfile', ['FROM_IMAGE': 'openjdk8', 'FROM_TAG': 'debian-slim'])
+        buildImage('adoptopenjdk', 'openjdk8-openj9-debian-slim', 'apps/adoptopenjdk-debian/Dockerfile', ['FROM_IMAGE': 'openjdk8-openj9', 'FROM_TAG': 'debian-slim'])
+        buildImage('adoptopenjdk', 'openjdk11-debian-slim', 'apps/adoptopenjdk-debian/Dockerfile', ['FROM_IMAGE': 'openjdk11', 'FROM_TAG': 'debian-slim'])
+        buildImage('adoptopenjdk', 'openjdk11-openj9-debian-slim', 'apps/adoptopenjdk-debian/Dockerfile', ['FROM_IMAGE': 'openjdk11-openj9', 'FROM_TAG': 'debian-slim'])
 
-              buildAndPushImage("apps/adoptopenjdk-alpine/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk11-alpine-slim", ["FROM_IMAGE": "openjdk11", "FROM_TAG": "alpine-slim", ])
-              buildAndPushImage("apps/adoptopenjdk-alpine/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk11-openj9-alpine-slim", ["FROM_IMAGE": "openjdk11-openj9", "FROM_TAG": "alpine-slim", ])
+        buildImage('adoptopenjdk-coreutils', 'openjdk8-debian-slim', 'apps/adoptopenjdk-debian-coreutils/Dockerfile', ['FROM_TAG': 'openjdk8-debian-slim'])
+        buildImage('adoptopenjdk-coreutils', 'openjdk8-openj9-debian-slim', 'apps/adoptopenjdk-debian-coreutils/Dockerfile', ['FROM_TAG': 'openjdk8-openj9-debian-slim'])
+        buildImage('adoptopenjdk-coreutils', 'openjdk11-debian-slim', 'apps/adoptopenjdk-debian-coreutils/Dockerfile', ['FROM_TAG': 'openjdk11-debian-slim'])
+        buildImage('adoptopenjdk-coreutils', 'openjdk11-openj9-debian-slim', 'apps/adoptopenjdk-debian-coreutils/Dockerfile', ['FROM_TAG': 'openjdk11-openj9-debian-slim'])
+      }
+    }
+    stage('Build Images eclipse-temurin') {
+      steps {
+        buildImage('eclipse-temurin', '8-alpine', 'apps/eclipse-temurin-alpine/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '8-alpine'], )
+        buildImage('eclipse-temurin', '11-alpine', 'apps/eclipse-temurin-alpine/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '11-alpine'])
+        buildImage('eclipse-temurin-coreutils', '8-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '8-alpine'])
+        buildImage('eclipse-temurin-coreutils', '11-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '11-alpine'])
+        buildImage('eclipse-temurin', '8-ubuntu', 'apps/eclipse-temurin-ubuntu/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '8'])
+        buildImage('eclipse-temurin', '11-ubuntu', 'apps/eclipse-temurin-ubuntu/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '11'])
+        buildImage('eclipse-temurin-coreutils', '8-ubuntu', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '8-ubuntu'])
+        buildImage('eclipse-temurin-coreutils', '11-ubuntu', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '11-ubuntu'])
+      }
+    }
+    stage('Build Images semeru') {
+      steps {
+        buildImage('semeru-ubuntu', 'openjdk8-jammy', 'apps/semeru-ubuntu/Dockerfile', ['FROM_IMAGE': 'ibm-semeru-runtimes', 'FROM_TAG': 'open-8-jdk-jammy'])
+        buildImage('semeru-ubuntu-coreutils', 'openjdk8-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'openjdk8-jammy'])
+        buildImage('semeru-ubuntu', 'openjdk11-jammy', 'apps/semeru-ubuntu/Dockerfile', ['FROM_IMAGE': 'ibm-semeru-runtimes', 'FROM_TAG': 'open-11-jdk-jammy'])
+        buildImage('semeru-ubuntu-coreutils', 'openjdk11-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'openjdk11-jammy'])
+        buildImage('semeru-ubuntu', 'openjdk17-jammy', 'apps/semeru-ubuntu/Dockerfile', ['FROM_IMAGE': 'ibm-semeru-runtimes', 'FROM_TAG': 'open-17-jdk-jammy'])
+        buildImage('semeru-ubuntu-coreutils', 'openjdk17-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'openjdk17-jammy'])
+      }
+    }
+    stage('Build Images gtk3-wm') {
+      steps {
+        buildImage('fedora-gtk3-mutter', '37-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '37'])
+        buildImage('fedora-gtk3-mutter', '38-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '38'])
+        buildImage('fedora-gtk3-mutter', '39-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '39'])
+        buildImage('fedora-gtk3-mutter', 'rawhide-gtk3', 'gtk3-wm/fedora-mutter/rawhide/Dockerfile', ['FROM_TAG': 'rawhide'])
 
-              buildAndPushImage("apps/adoptopenjdk-alpine-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk8-alpine-slim", ["FROM_TAG": "openjdk8-alpine-slim", ])
-              buildAndPushImage("apps/adoptopenjdk-alpine-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk8-openj9-alpine-slim", ["FROM_TAG": "openjdk8-openj9-alpine-slim", ])
+        buildImage('ubuntu-gtk3-metacity', '20.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '20.04'])
+        buildImage('ubuntu-gtk3-metacity', '22.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '22.04'])
 
-              buildAndPushImage("apps/adoptopenjdk-alpine-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk11-alpine-slim", ["FROM_TAG": "openjdk11-alpine-slim", ])
-              buildAndPushImage("apps/adoptopenjdk-alpine-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk11-openj9-alpine-slim", ["FROM_TAG": "openjdk11-openj9-alpine-slim", ])
-
-              buildAndPushImage("apps/adoptopenjdk-debian/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk8-debian-slim", ["FROM_IMAGE": "openjdk8", "FROM_TAG": "debian-slim", ])
-              buildAndPushImage("apps/adoptopenjdk-debian/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk8-openj9-debian-slim", ["FROM_IMAGE": "openjdk8-openj9", "FROM_TAG": "debian-slim", ])
-
-              buildAndPushImage("apps/adoptopenjdk-debian/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk11-debian-slim", ["FROM_IMAGE": "openjdk11", "FROM_TAG": "debian-slim", ])
-              buildAndPushImage("apps/adoptopenjdk-debian/Dockerfile", env.REPO_NAME, "adoptopenjdk", "openjdk11-openj9-debian-slim", ["FROM_IMAGE": "openjdk11-openj9", "FROM_TAG": "debian-slim", ])
-
-              buildAndPushImage("apps/adoptopenjdk-debian-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk8-debian-slim", ["FROM_TAG": "openjdk8-debian-slim", ])
-              buildAndPushImage("apps/adoptopenjdk-debian-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk8-openj9-debian-slim", ["FROM_TAG": "openjdk8-openj9-debian-slim", ])
-
-              buildAndPushImage("apps/adoptopenjdk-debian-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk11-debian-slim", ["FROM_TAG": "openjdk11-debian-slim", ])
-              buildAndPushImage("apps/adoptopenjdk-debian-coreutils/Dockerfile", env.REPO_NAME, "adoptopenjdk-coreutils", "openjdk11-openj9-debian-slim", ["FROM_TAG": "openjdk11-openj9-debian-slim", ])
-
-              /* Temurin */
-              buildAndPushImage("apps/eclipse-temurin-alpine/Dockerfile", env.REPO_NAME, "eclipse-temurin", "8-alpine", ["FROM_IMAGE": "eclipse-temurin", "FROM_TAG": "8-alpine", ])
-              buildAndPushImage("apps/eclipse-temurin-alpine/Dockerfile", env.REPO_NAME, "eclipse-temurin", "11-alpine", ["FROM_IMAGE": "eclipse-temurin", "FROM_TAG": "11-alpine", ])
-              buildAndPushImage("apps/eclipse-temurin-alpine-coreutils/Dockerfile", env.REPO_NAME, "eclipse-temurin-coreutils", "8-alpine", ["FROM_TAG": "8-alpine", ])
-              buildAndPushImage("apps/eclipse-temurin-alpine-coreutils/Dockerfile", env.REPO_NAME, "eclipse-temurin-coreutils", "11-alpine", ["FROM_TAG": "11-alpine", ])
-              buildAndPushImage("apps/eclipse-temurin-ubuntu/Dockerfile", env.REPO_NAME, "eclipse-temurin", "8-ubuntu", ["FROM_IMAGE": "eclipse-temurin", "FROM_TAG": "8", ])
-              buildAndPushImage("apps/eclipse-temurin-ubuntu/Dockerfile", env.REPO_NAME, "eclipse-temurin", "11-ubuntu", ["FROM_IMAGE": "eclipse-temurin", "FROM_TAG": "11", ])
-              buildAndPushImage("apps/eclipse-temurin-ubuntu-coreutils/Dockerfile", env.REPO_NAME, "eclipse-temurin-coreutils", "8-ubuntu", ["FROM_TAG": "8-ubuntu", ])
-              buildAndPushImage("apps/eclipse-temurin-ubuntu-coreutils/Dockerfile", env.REPO_NAME, "eclipse-temurin-coreutils", "11-ubuntu", ["FROM_TAG": "11-ubuntu", ])
-              /* eo Temurin */
-
-              buildAndPushImage("apps/semeru-ubuntu/Dockerfile", env.REPO_NAME, "semeru-ubuntu", "openjdk8-jammy", ["FROM_IMAGE": "ibm-semeru-runtimes", "FROM_TAG": "open-8-jdk-jammy", ])
-              buildAndPushImage("apps/semeru-ubuntu-coreutils/Dockerfile", env.REPO_NAME, "semeru-ubuntu-coreutils", "openjdk8-jammy", ["FROM_TAG": "openjdk8-jammy", ])
-              buildAndPushImage("apps/semeru-ubuntu/Dockerfile", env.REPO_NAME, "semeru-ubuntu", "openjdk11-jammy", ["FROM_IMAGE": "ibm-semeru-runtimes", "FROM_TAG": "open-11-jdk-jammy", ])
-              buildAndPushImage("apps/semeru-ubuntu-coreutils/Dockerfile", env.REPO_NAME, "semeru-ubuntu-coreutils", "openjdk11-jammy", ["FROM_TAG": "openjdk11-jammy", ])
-              buildAndPushImage("apps/semeru-ubuntu/Dockerfile", env.REPO_NAME, "semeru-ubuntu", "openjdk17-jammy", ["FROM_IMAGE": "ibm-semeru-runtimes", "FROM_TAG": "open-17-jdk-jammy", ])
-              buildAndPushImage("apps/semeru-ubuntu-coreutils/Dockerfile", env.REPO_NAME, "semeru-ubuntu-coreutils", "openjdk17-jammy", ["FROM_TAG": "openjdk17-jammy", ])
-            }
-          }
-        }
-        stage('gtk3-wm fedora') {
-          steps {
-            withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "37-gtk3.24", ["FROM_TAG": "37", ])
-              buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "38-gtk3.24", ["FROM_TAG": "38", ])
-              buildAndPushImage("gtk3-wm/fedora-mutter/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "39-gtk3.24", ["FROM_TAG": "39", ])
-              buildAndPushImage("gtk3-wm/fedora-mutter/rawhide/Dockerfile", env.REPO_NAME, "fedora-gtk3-mutter", "rawhide-gtk3", ["FROM_TAG": "rawhide", ])
-            }
-          }
-        }
-        stage('gtk3-wm ubuntu') {
-          steps {
-            withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "20.04-gtk3.24", ["FROM_TAG": "20.04", ])
-              buildAndPushImage("gtk3-wm/ubuntu-metacity/Dockerfile", env.REPO_NAME, "ubuntu-gtk3-metacity", "22.04-gtk3.24", ["FROM_TAG": "22.04", ])
-            }
-          }
-        }
-        stage('gtk3-wm debian') {
-          steps {
-            withDockerRegistry([credentialsId: 'e93ba8f9-59fc-4fe4-a9a7-9a8bd60c17d9', url: 'https://index.docker.io/v1/']) {
-              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "10-gtk3.24", ["FROM_TAG": "10-slim", ])
-              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "11-gtk3.24", ["FROM_TAG": "11-slim", ])
-              buildAndPushImage("gtk3-wm/debian-metacity/Dockerfile", env.REPO_NAME, "debian-gtk3-metacity", "12-gtk3.24", ["FROM_TAG": "12-slim", ])
-            }
-          }
-        }
+        buildImage('debian-gtk3-metacity', '10-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '10-slim'])
+        buildImage('debian-gtk3-metacity', '11-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '11-slim'])
+        buildImage('debian-gtk3-metacity', '12-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '12-slim'])
       }
     }
   }
@@ -163,28 +128,28 @@ pipeline {
   }
 }
 
-def buildAndPushLibraryImage(String dockerfile, String repo, String distroImage, List<String> tags, Map<String, String> buildArgs = [:]) {
-  def latestTag = tags.last()
-  tags.each { tag ->
-    if (tag == latestTag) {
-      buildAndPushImage(dockerfile, repo, distroImage, tag, true, ["DISTRO": "${distroImage}:${tag}"] + buildArgs)
-    } else {
-      buildAndPushImage(dockerfile, repo, distroImage, tag, ["DISTRO": "${distroImage}:${tag}"] + buildArgs)
-    }
+def buildLibraryImage(String name, List<String> versions, String dockerfile='distros/Dockerfile') {
+  def latestVersion = versions.last()
+  versions.each { version ->
+    String distroName = name + ':' + version
+    buildImage(name, version, dockerfile, ['DISTRO': distroName], version == latestVersion)
   }
 }
 
-def buildAndPushImage(String dockerfile, String repo, String image, String tag, Map<String, String> buildArgs = [:]) {
-  buildAndPushImage(dockerfile, repo, image, tag, false, buildArgs)
-}
+def buildImage(String name, String version, String dockerfile, Map<String, String> buildArgs = [:], boolean latest = false) {
+  String distroName = env.REPO_NAME + '/' + name + ':' + version
+  println '############ buildImage ' + distroName + ' ############'
+  def containerBuildArgs = buildArgs.collect{ k, v -> '--opt build-arg:' + k + '=' + v }.join(' ')
 
-def buildAndPushImage(String dockerfile, String repo, String image, String tag, boolean latest, Map<String, String> buildArgs = [:]) {
-  def dockerBuildArgs = buildArgs.collect{ k, v -> "--opt \"build-arg:${k}=${v}\"" }.join(" ")
-  sh """
-    if [ "\${GIT_BRANCH}" = "master" ]; then
-      \${DOCKERTOOLS_PATH}/dockerw build  "${repo}/${image}" "${tag}" "${dockerfile}" "." "true" "${latest}" ${dockerBuildArgs}
-    else
-      \${DOCKERTOOLS_PATH}/dockerw build  "${repo}/${image}" "${tag}" "${dockerfile}" "." "false" "${latest}" ${dockerBuildArgs}
-    fi
-  """
+  container('containertools') {
+    containerBuild(
+      credentialsId: env.CREDENTIALS_ID,
+      name: env.REPO_NAME + '/' + name,
+      version: version,
+      dockerfile: dockerfile,
+      buildArgs: containerBuildArgs,
+      push: env.GIT_BRANCH == 'master',
+      latest: latest
+    )
+  }
 }
