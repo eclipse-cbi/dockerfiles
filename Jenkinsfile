@@ -137,14 +137,14 @@ def buildLibraryImage(String name, List<String> versions, String dockerfile='dis
 }
 
 def buildImage(String name, String version, String dockerfile, Map<String, String> buildArgs = [:], boolean latest = false) {
-  String distroName = env.REPO_NAME + '/' + name + ':' + version
+  String distroName = env.NAMESPACE + '/' + name + ':' + version
   println '############ buildImage ' + distroName + ' ############'
   def containerBuildArgs = buildArgs.collect{ k, v -> '--opt build-arg:' + k + '=' + v }.join(' ')
 
   container('containertools') {
     containerBuild(
       credentialsId: env.CREDENTIALS_ID,
-      name: env.REPO_NAME + '/' + name,
+      name: env.NAMESPACE + '/' + name,
       version: version,
       dockerfile: dockerfile,
       buildArgs: containerBuildArgs,
