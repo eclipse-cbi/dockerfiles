@@ -1,9 +1,9 @@
 ARG FROM_TAG=""
 FROM alpine:${FROM_TAG}
 
-# Check on 
-# https://pkgs.alpinelinux.org/packages?name=openssh&branch=v3.15
-ARG OPENSSH_VERSION="8.8_p1-r1"
+# Check on
+# https://pkgs.alpinelinux.org/packages?name=openssh&branch=v3.19
+ARG OPENSSH_VERSION="9.6_p1-r0"
 ENV OPENSSH_VERSION=${OPENSSH_VERSION}
 
 RUN apk --no-cache add openssh=${OPENSSH_VERSION}
