@@ -27,11 +27,11 @@ pipeline {
   stages {
     stage('Build Library Image') {
       steps {
-        buildLibraryImage('alpine', ['edge', '3.16', '3.17', '3.18'])
+        buildLibraryImage('alpine', ['edge', '3.18', '3.19'])
         buildLibraryImage('debian', ['10-slim', '11-slim', '12-slim'])
-        buildLibraryImage('fedora', ['rawhide', '37', '38', '39'])
+        buildLibraryImage('fedora', ['rawhide', '39', '40'])
         buildLibraryImage('ubuntu', ['20.04', '22.04'])
-        buildLibraryImage('node', ['18-alpine', '20-alpine'], 'apps/node/Dockerfile')
+        buildLibraryImage('node', ['20-alpine', '21-alpine'], 'apps/node/Dockerfile')
       }
     }
     stage('Build Images hugo') {
@@ -42,50 +42,23 @@ pipeline {
     }
     stage('Build Image openssh') {
       steps {
-        buildImage('openssh', '8.8_p1-r1', 'apps/ci-admin/openssh/Dockerfile', ['FROM_TAG': '3.15', 'OPENSSH_VERSION': '8.8_p1-r1'])
-      }
-    }
-    stage('Build Images adoptopenjdk') {
-      steps {
-        // alpine 
-        buildImage('adoptopenjdk', 'openjdk8-alpine-slim', 'apps/adoptopenjdk-alpine/Dockerfile', ['FROM_IMAGE': 'openjdk8', 'FROM_TAG': 'alpine-slim'])
-        buildImage('adoptopenjdk', 'openjdk8-openj9-alpine-slim', 'apps/adoptopenjdk-alpine/Dockerfile', ['FROM_IMAGE': 'openjdk8-openj9', 'FROM_TAG': 'alpine-slim'])
-        buildImage('adoptopenjdk', 'openjdk11-alpine-slim', 'apps/adoptopenjdk-alpine/Dockerfile', ['FROM_IMAGE': 'openjdk11', 'FROM_TAG': 'alpine-slim'])
-        buildImage('adoptopenjdk', 'openjdk11-openj9-alpine-slim', 'apps/adoptopenjdk-alpine/Dockerfile', ['FROM_IMAGE': 'openjdk11-openj9', 'FROM_TAG': 'alpine-slim'])
-
-        buildImage('adoptopenjdk-coreutils', 'openjdk8-alpine-slim', 'apps/adoptopenjdk-alpine-coreutils/Dockerfile', ['FROM_TAG': 'openjdk8-alpine-slim'])
-        buildImage('adoptopenjdk-coreutils', 'openjdk8-openj9-alpine-slim', 'apps/adoptopenjdk-alpine-coreutils/Dockerfile', ['FROM_TAG': 'openjdk8-openj9-alpine-slim'])
-        buildImage('adoptopenjdk-coreutils', 'openjdk11-alpine-slim', 'apps/adoptopenjdk-alpine-coreutils/Dockerfile', ['FROM_TAG': 'openjdk11-alpine-slim'])
-        buildImage('adoptopenjdk-coreutils', 'openjdk11-openj9-alpine-slim', 'apps/adoptopenjdk-alpine-coreutils/Dockerfile', ['FROM_TAG': 'openjdk11-openj9-alpine-slim'])
-
-        // debian 
-        buildImage('adoptopenjdk', 'openjdk8-debian-slim', 'apps/adoptopenjdk-debian/Dockerfile', ['FROM_IMAGE': 'openjdk8', 'FROM_TAG': 'debian-slim'])
-        buildImage('adoptopenjdk', 'openjdk8-openj9-debian-slim', 'apps/adoptopenjdk-debian/Dockerfile', ['FROM_IMAGE': 'openjdk8-openj9', 'FROM_TAG': 'debian-slim'])
-        buildImage('adoptopenjdk', 'openjdk11-debian-slim', 'apps/adoptopenjdk-debian/Dockerfile', ['FROM_IMAGE': 'openjdk11', 'FROM_TAG': 'debian-slim'])
-        buildImage('adoptopenjdk', 'openjdk11-openj9-debian-slim', 'apps/adoptopenjdk-debian/Dockerfile', ['FROM_IMAGE': 'openjdk11-openj9', 'FROM_TAG': 'debian-slim'])
-
-        buildImage('adoptopenjdk-coreutils', 'openjdk8-debian-slim', 'apps/adoptopenjdk-debian-coreutils/Dockerfile', ['FROM_TAG': 'openjdk8-debian-slim'])
-        buildImage('adoptopenjdk-coreutils', 'openjdk8-openj9-debian-slim', 'apps/adoptopenjdk-debian-coreutils/Dockerfile', ['FROM_TAG': 'openjdk8-openj9-debian-slim'])
-        buildImage('adoptopenjdk-coreutils', 'openjdk11-debian-slim', 'apps/adoptopenjdk-debian-coreutils/Dockerfile', ['FROM_TAG': 'openjdk11-debian-slim'])
-        buildImage('adoptopenjdk-coreutils', 'openjdk11-openj9-debian-slim', 'apps/adoptopenjdk-debian-coreutils/Dockerfile', ['FROM_TAG': 'openjdk11-openj9-debian-slim'])
+        buildImage('openssh', '9.6_p1-r0', 'apps/ci-admin/openssh/Dockerfile', ['FROM_TAG': '3.19', 'OPENSSH_VERSION': '9.6_p1-r0'])
       }
     }
     stage('Build Images eclipse-temurin') {
       steps {
-        buildImage('eclipse-temurin', '8-alpine', 'apps/eclipse-temurin-alpine/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '8-alpine'], )
         buildImage('eclipse-temurin', '11-alpine', 'apps/eclipse-temurin-alpine/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '11-alpine'])
-        buildImage('eclipse-temurin-coreutils', '8-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '8-alpine'])
+        buildImage('eclipse-temurin', '17-alpine', 'apps/eclipse-temurin-alpine/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '17-alpine'])
         buildImage('eclipse-temurin-coreutils', '11-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '11-alpine'])
-        buildImage('eclipse-temurin', '8-ubuntu', 'apps/eclipse-temurin-ubuntu/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '8'])
+        buildImage('eclipse-temurin-coreutils', '17-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '17-alpine'])
         buildImage('eclipse-temurin', '11-ubuntu', 'apps/eclipse-temurin-ubuntu/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '11'])
-        buildImage('eclipse-temurin-coreutils', '8-ubuntu', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '8-ubuntu'])
+        buildImage('eclipse-temurin', '17-ubuntu', 'apps/eclipse-temurin-ubuntu/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '17'])
         buildImage('eclipse-temurin-coreutils', '11-ubuntu', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '11-ubuntu'])
+        buildImage('eclipse-temurin-coreutils', '17-ubuntu', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '17-ubuntu'])
       }
     }
     stage('Build Images semeru') {
       steps {
-        buildImage('semeru-ubuntu', 'openjdk8-jammy', 'apps/semeru-ubuntu/Dockerfile', ['FROM_IMAGE': 'ibm-semeru-runtimes', 'FROM_TAG': 'open-8-jdk-jammy'])
-        buildImage('semeru-ubuntu-coreutils', 'openjdk8-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'openjdk8-jammy'])
         buildImage('semeru-ubuntu', 'openjdk11-jammy', 'apps/semeru-ubuntu/Dockerfile', ['FROM_IMAGE': 'ibm-semeru-runtimes', 'FROM_TAG': 'open-11-jdk-jammy'])
         buildImage('semeru-ubuntu-coreutils', 'openjdk11-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'openjdk11-jammy'])
         buildImage('semeru-ubuntu', 'openjdk17-jammy', 'apps/semeru-ubuntu/Dockerfile', ['FROM_IMAGE': 'ibm-semeru-runtimes', 'FROM_TAG': 'open-17-jdk-jammy'])
@@ -94,9 +67,8 @@ pipeline {
     }
     stage('Build Images gtk3-wm') {
       steps {
-        buildImage('fedora-gtk3-mutter', '37-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '37'])
-        buildImage('fedora-gtk3-mutter', '38-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '38'])
         buildImage('fedora-gtk3-mutter', '39-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '39'])
+        buildImage('fedora-gtk3-mutter', '40-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '40'])
         buildImage('fedora-gtk3-mutter', 'rawhide-gtk3', 'gtk3-wm/fedora-mutter/rawhide/Dockerfile', ['FROM_TAG': 'rawhide'])
 
         buildImage('ubuntu-gtk3-metacity', '20.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '20.04'])
