@@ -1,5 +1,5 @@
 ARG FROM_TAG=""
-FROM eclipsecbi/debian:${FROM_TAG}
+FROM debian:${FROM_TAG}
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y --force-yes --no-install-recommends \

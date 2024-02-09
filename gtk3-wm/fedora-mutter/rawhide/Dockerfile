@@ -1,5 +1,5 @@
 ARG FROM_TAG=""
-FROM eclipsecbi/fedora:${FROM_TAG}
+FROM fedora:${FROM_TAG}
 
 RUN dnf -y install \
       gtk3 \

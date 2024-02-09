@@ -7,7 +7,12 @@
 # SPDX-License-Identifier: EPL-2.0 OR MIT
 #*******************************************************************************
 ARG FROM_TAG=""
-FROM eclipsecbi/eclipse-temurin:${FROM_TAG}
+FROM eclipse-temurin:${FROM_TAG}
+
+# Workaround for https://github.com/AdoptOpenJDK/openjdk-docker/issues/75
+# java.lang.NullPointerException
+#         at sun.awt.FontConfiguration.getVersion(FontConfiguration.java:1264)
+RUN ln -s /lib/libc.musl-x86_64.so.1 /usr/lib/libc.musl-x86_64.so.1
 
 RUN apk add --no-cache \
   bash \
