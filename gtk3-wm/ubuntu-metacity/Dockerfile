@@ -1,5 +1,5 @@
 ARG FROM_TAG=""
-FROM eclipsecbi/ubuntu:${FROM_TAG}
+FROM ubuntu:${FROM_TAG}
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \

@@ -7,7 +7,7 @@
 # SPDX-License-Identifier: EPL-2.0 OR MIT
 #*******************************************************************************
 ARG FROM_TAG=""
-FROM eclipsecbi/semeru-ubuntu:${FROM_TAG}
+FROM ibm-semeru-runtimes:${FROM_TAG}
 
 RUN apt-get update && apt-get install -y software-properties-common \
   && add-apt-repository -y ppa:git-core/ppa
