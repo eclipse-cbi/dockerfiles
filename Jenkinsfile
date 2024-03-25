@@ -34,6 +34,11 @@ pipeline {
         buildLibraryImage('node', ['20-alpine', '21-alpine'], 'apps/node/Dockerfile')
       }
     }
+    stage('Build buildpack-deps') {
+      steps {
+        buildImage('buildpack-deps', 'noble', 'apps/buildpack-deps-ubuntu/Dockerfile', ['BUILDPACK_TAG': 'noble-scm'])
+      }
+    }
     stage('Build Images hugo') {
       steps {
         buildImage('hugo', '0.110.0', 'apps/hugo/Dockerfile', ['HUGO_VERSION': '0.110.0'])
