@@ -1,13 +1,8 @@
 @Library('releng-pipeline@main') _
 
 pipeline {
-  agent {
-    kubernetes {
-      yaml loadOverridableResource(
-        libraryResource: 'org/eclipsefdn/container/agent.yml'
-      )
-    }
-  }
+
+  agent any
 
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
@@ -28,6 +23,14 @@ pipeline {
     stage('Run Builds') {
       parallel {
         stage('Build Library Image') {
+          agent {
+            kubernetes {
+              inheritFrom 'containertoolsLibraryImage'
+              yaml loadOverridableResource(
+                libraryResource: 'org/eclipsefdn/container/agent.yml'
+              )
+            }
+          }
           steps {
             buildLibraryImage('alpine', ['edge', '3.16', '3.17', '3.18'])
             buildLibraryImage('debian', ['10-slim', '11-slim', '12-slim'])
@@ -37,17 +40,41 @@ pipeline {
           }
         }
         stage('Build Images hugo') {
+          agent {
+            kubernetes {
+              inheritFrom 'containertoolsHugoImage'
+              yaml loadOverridableResource(
+                libraryResource: 'org/eclipsefdn/container/agent.yml'
+              )
+            }
+          }
           steps {
             buildImage('hugo', '0.81.0', 'apps/hugo/Dockerfile', ['HUGO_VERSION': '0.81.0'])
             buildImage('hugo_extended', '0.81.0', 'apps/hugo_extended/Dockerfile', ['HUGO_VERSION': '0.81.0'])
           }
         }
         stage('Build Image openssh') {
+          agent {
+            kubernetes {
+              inheritFrom 'containertoolsOpensshImage'
+              yaml loadOverridableResource(
+                libraryResource: 'org/eclipsefdn/container/agent.yml'
+              )
+            }
+          }
           steps {
             buildImage('openssh', '8.8_p1-r1', 'apps/ci-admin/openssh/Dockerfile', ['FROM_TAG': '3.15', 'OPENSSH_VERSION': '8.8_p1-r1'])
           }
         }
         stage('Build Images adoptopenjdk') {
+          agent {
+            kubernetes {
+              inheritFrom 'containertoolsAdoptopenjdkImage'
+              yaml loadOverridableResource(
+                libraryResource: 'org/eclipsefdn/container/agent.yml'
+              )
+            }
+          }
           steps {
             // alpine 
             buildImage('adoptopenjdk', 'openjdk8-alpine-slim', 'apps/adoptopenjdk-alpine/Dockerfile', ['FROM_IMAGE': 'openjdk8', 'FROM_TAG': 'alpine-slim'])
@@ -73,6 +100,14 @@ pipeline {
           }
         }
         stage('Build Images eclipse-temurin') {
+          agent {
+            kubernetes {
+              inheritFrom 'containertoolsTemurinImage'
+              yaml loadOverridableResource(
+                libraryResource: 'org/eclipsefdn/container/agent.yml'
+              )
+            }
+          }
           steps {
             buildImage('eclipse-temurin', '8-alpine', 'apps/eclipse-temurin-alpine/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '8-alpine'], )
             buildImage('eclipse-temurin', '11-alpine', 'apps/eclipse-temurin-alpine/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '11-alpine'])
@@ -85,6 +120,14 @@ pipeline {
           }
         }
         stage('Build Images semeru') {
+          agent {
+            kubernetes {
+              inheritFrom 'containertoolsSemeruImage'
+              yaml loadOverridableResource(
+                libraryResource: 'org/eclipsefdn/container/agent.yml'
+              )
+            }
+          }
           steps {
             buildImage('semeru-ubuntu', 'openjdk8-jammy', 'apps/semeru-ubuntu/Dockerfile', ['FROM_IMAGE': 'ibm-semeru-runtimes', 'FROM_TAG': 'open-8-jdk-jammy'])
             buildImage('semeru-ubuntu-coreutils', 'openjdk8-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'openjdk8-jammy'])
@@ -95,6 +138,14 @@ pipeline {
           }
         }
         stage('Build Images gtk3-wm') {
+          agent {
+            kubernetes {
+              inheritFrom 'containertoolsGtk3Image'
+              yaml loadOverridableResource(
+                libraryResource: 'org/eclipsefdn/container/agent.yml'
+              )
+            }
+          }
           steps {
             buildImage('fedora-gtk3-mutter', '37-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '37'])
             buildImage('fedora-gtk3-mutter', '38-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '38'])
@@ -144,8 +195,16 @@ def buildImage(String name, String version, String dockerfile, Map<String, Strin
   String distroName = env.NAMESPACE + '/' + name + ':' + version
   println '############ buildImage ' + distroName + ' ############'
   def containerBuildArgs = buildArgs.collect{ k, v -> '--opt build-arg:' + k + '=' + v }.join(' ')
-
+  println '###### dockerfile ' + dockerfile 
+  println '###### buildArgs ' + buildArgs
+  println '###### latest ' + latest
   container('containertools') {
+
+    println '###### (containertools) name ' + env.NAMESPACE + '/' + name 
+    println '###### (containertools) version ' + version 
+    println '###### (containertools) dockerfile ' + dockerfile 
+    println '###### (containertools) containerBuildArgs ' + containerBuildArgs
+    println '###### (containertools) latest ' + latest
     containerBuild(
       credentialsId: env.CREDENTIALS_ID,
       name: env.NAMESPACE + '/' + name,
