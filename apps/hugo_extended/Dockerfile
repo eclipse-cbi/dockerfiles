@@ -7,7 +7,8 @@ ARG HUGO_VERSION=0.110.0
 ENV HUGO_VERSION=${HUGO_VERSION}
 RUN curl -L https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.tar.gz | tar xvz
 
-FROM alpine:3.18 # the GLIBC installation below only works upto alpine:3.18
+# the GLIBC installation below only works up to alpine:3.18
+FROM alpine:3.18
 
 COPY --from=builder hugo /usr/local/bin/hugo
 
