@@ -118,7 +118,7 @@ def buildImage(String name, String version, String dockerfile, Map<String, Strin
       name: env.NAMESPACE + '/' + name,
       version: version,
       dockerfile: dockerfile,
-      buildArgs: containerBuildArgs,
+      buildArgs: containerBuildArgs + ' --registry-mirror https://repo3.eclipse.org:8082',
       push: env.GIT_BRANCH == 'master',
       latest: latest
     )
