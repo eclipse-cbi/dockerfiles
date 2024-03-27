@@ -47,21 +47,15 @@ pipeline {
     }
     stage('Build Images eclipse-temurin') {
       steps {
-        buildImage('eclipse-temurin', '11-alpine', 'apps/eclipse-temurin-alpine/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '11-alpine'])
-        buildImage('eclipse-temurin', '17-alpine', 'apps/eclipse-temurin-alpine/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '17-alpine'])
         buildImage('eclipse-temurin-coreutils', '11-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '11-alpine'])
         buildImage('eclipse-temurin-coreutils', '17-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '17-alpine'])
-        buildImage('eclipse-temurin', '11-ubuntu', 'apps/eclipse-temurin-ubuntu/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '11'])
-        buildImage('eclipse-temurin', '17-ubuntu', 'apps/eclipse-temurin-ubuntu/Dockerfile', ['FROM_IMAGE': 'eclipse-temurin', 'FROM_TAG': '17'])
         buildImage('eclipse-temurin-coreutils', '11-ubuntu', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '11']) // eclipse-temurin:11 => ubuntu 22.04
         buildImage('eclipse-temurin-coreutils', '17-ubuntu', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '17']) // eclipse-temurin:17 => ubuntu 22.04
       }
     }
     stage('Build Images semeru') {
       steps {
-        buildImage('semeru-ubuntu', 'openjdk11-jammy', 'apps/semeru-ubuntu/Dockerfile', ['FROM_IMAGE': 'ibm-semeru-runtimes', 'FROM_TAG': 'open-11-jdk-jammy'])
         buildImage('semeru-ubuntu-coreutils', 'openjdk11-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'openjdk11-jammy'])
-        buildImage('semeru-ubuntu', 'openjdk17-jammy', 'apps/semeru-ubuntu/Dockerfile', ['FROM_IMAGE': 'ibm-semeru-runtimes', 'FROM_TAG': 'open-17-jdk-jammy'])
         buildImage('semeru-ubuntu-coreutils', 'openjdk17-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'openjdk17-jammy'])
       }
     }
