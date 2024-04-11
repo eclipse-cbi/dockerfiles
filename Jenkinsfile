@@ -36,7 +36,7 @@ pipeline {
     }
     stage('Build buildpack-deps') {
       steps {
-        buildImage('buildpack-deps', 'noble', 'apps/buildpack-deps-ubuntu/Dockerfile', ['BUILDPACK_TAG': 'noble-scm'])
+        buildImage('buildpack-deps', 'noble', 'apps/buildpack-deps-ubuntu/Dockerfile', ['BUILDPACK_TAG': 'noble-scm'], true)
       }
     }
     stage('Build Images hugo') {
