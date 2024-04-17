@@ -102,7 +102,8 @@ pipeline {
             buildImage('semeru-ubuntu-coreutils', 'openjdk17-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'open-17-jdk-jammy'])
           }
         }
-        stage('Build Images gtk3-wm') {
+        
+        stage('Build Images fedora-gtk3-wm') {
           agent {
             kubernetes {
               yaml loadOverridableResource(
@@ -114,10 +115,30 @@ pipeline {
             buildImage('fedora-gtk3-mutter', '39-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '39'])
             buildImage('fedora-gtk3-mutter', '40-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '40'])
             buildImage('fedora-gtk3-mutter', 'rawhide-gtk3', 'gtk3-wm/fedora-mutter/rawhide/Dockerfile', ['FROM_TAG': 'rawhide'])
-
+          }
+        }
+        stage('Build Images ubuntu-gtk3-wm') {
+          agent {
+            kubernetes {
+              yaml loadOverridableResource(
+                libraryResource: 'org/eclipsefdn/container/agent.yml'
+              )
+            }
+          }
+          steps {
             buildImage('ubuntu-gtk3-metacity', '20.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '20.04'])
             buildImage('ubuntu-gtk3-metacity', '22.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '22.04'])
-
+          }
+        }
+        stage('Build Images debian-gtk3-wm') {
+          agent {
+            kubernetes {
+              yaml loadOverridableResource(
+                libraryResource: 'org/eclipsefdn/container/agent.yml'
+              )
+            }
+          }
+          steps {
             buildImage('debian-gtk3-metacity', '10-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '10-slim'])
             buildImage('debian-gtk3-metacity', '11-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '11-slim'])
             buildImage('debian-gtk3-metacity', '12-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '12-slim'])
