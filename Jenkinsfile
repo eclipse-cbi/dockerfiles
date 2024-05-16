@@ -4,6 +4,7 @@ pipeline {
   agent any 
 
   options {
+    skipDefaultCheckout()
     buildDiscarder(logRotator(numToKeepStr: '5'))
     timeout(time: 90, unit: 'MINUTES')
   }
@@ -19,16 +20,15 @@ pipeline {
   }
 
   stages {
+    stage('Checkout Workspace') {
+      steps {
+        checkout scm
+        stash(name: 'workspace', includes: '**')
+      }
+    }
     stage('Run Builds') {
       parallel {
         stage('Build Library Image') {
-          agent {
-            kubernetes {
-              yaml loadOverridableResource(
-                libraryResource: 'org/eclipsefdn/container/agent.yml'
-              )
-            }
-          }
           steps {
             buildLibraryImage('alpine', ['edge', '3.18', '3.19'])
             buildLibraryImage('debian', ['10-slim', '11-slim', '12-slim'])
@@ -38,50 +38,22 @@ pipeline {
           }
         }
         stage('Build buildpack-deps') {
-          agent {
-            kubernetes {
-              yaml loadOverridableResource(
-                libraryResource: 'org/eclipsefdn/container/agent.yml'
-              )
-            }
-          }
           steps {
             buildImage('buildpack-deps', 'noble', 'apps/buildpack-deps-ubuntu/Dockerfile', ['BUILDPACK_TAG': 'noble-scm'], true)
           }
         }
         stage('Build Images hugo') {
-          agent {
-            kubernetes {
-              yaml loadOverridableResource(
-                libraryResource: 'org/eclipsefdn/container/agent.yml'
-              )
-            }
-          }
           steps {
             buildImage('hugo', '0.110.0', 'apps/hugo/Dockerfile', ['HUGO_VERSION': '0.110.0'])
             buildImage('hugo_extended', '0.110.0', 'apps/hugo_extended/Dockerfile', ['HUGO_VERSION': '0.110.0'])
           }
         }
         stage('Build Image openssh') {
-          agent {
-            kubernetes {
-              yaml loadOverridableResource(
-                libraryResource: 'org/eclipsefdn/container/agent.yml'
-              )
-            }
-          }
           steps {
             buildImage('openssh', '9.6_p1-r0', 'apps/ci-admin/openssh/Dockerfile', ['FROM_TAG': '3.19', 'OPENSSH_VERSION': '9.6_p1-r0'])
           }
         }
         stage('Build Images eclipse-temurin') {
-          agent {
-            kubernetes {
-              yaml loadOverridableResource(
-                libraryResource: 'org/eclipsefdn/container/agent.yml'
-              )
-            }
-          }
           steps {
             buildImage('eclipse-temurin-coreutils', '11-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '11-alpine'])
             buildImage('eclipse-temurin-coreutils', '17-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '17-alpine'])
@@ -90,13 +62,6 @@ pipeline {
           }
         }
         stage('Build Images semeru') {
-          agent {
-            kubernetes {
-              yaml loadOverridableResource(
-                libraryResource: 'org/eclipsefdn/container/agent.yml'
-              )
-            }
-          }
           steps {
             buildImage('semeru-ubuntu-coreutils', 'openjdk11-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'open-11-jdk-jammy'])
             buildImage('semeru-ubuntu-coreutils', 'openjdk17-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'open-17-jdk-jammy'])
@@ -104,13 +69,6 @@ pipeline {
         }
         
         stage('Build Images fedora-gtk3-wm') {
-          agent {
-            kubernetes {
-              yaml loadOverridableResource(
-                libraryResource: 'org/eclipsefdn/container/agent.yml'
-              )
-            }
-          }
           steps {
             buildImage('fedora-gtk3-mutter', '39-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '39'])
             buildImage('fedora-gtk3-mutter', '40-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '40'])
@@ -118,26 +76,12 @@ pipeline {
           }
         }
         stage('Build Images ubuntu-gtk3-wm') {
-          agent {
-            kubernetes {
-              yaml loadOverridableResource(
-                libraryResource: 'org/eclipsefdn/container/agent.yml'
-              )
-            }
-          }
           steps {
             buildImage('ubuntu-gtk3-metacity', '20.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '20.04'])
             buildImage('ubuntu-gtk3-metacity', '22.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '22.04'])
           }
         }
         stage('Build Images debian-gtk3-wm') {
-          agent {
-            kubernetes {
-              yaml loadOverridableResource(
-                libraryResource: 'org/eclipsefdn/container/agent.yml'
-              )
-            }
-          }
           steps {
             buildImage('debian-gtk3-metacity', '10-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '10-slim'])
             buildImage('debian-gtk3-metacity', '11-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '11-slim'])
@@ -187,16 +131,20 @@ def buildImage(String name, String version, String dockerfile, Map<String, Strin
     * Dockerfile ${dockerfile}
     * Latest ${latest}
     """
-  
-  container('containertools') {
-    containerBuild(
-      credentialsId: env.CREDENTIALS_ID,
-      name: env.NAMESPACE + '/' + name,
-      version: version,
-      dockerfile: dockerfile,
-      buildArgs: containerBuildArgs,
-      push: env.GIT_BRANCH == 'master',
-      latest: latest
-    )
+  podTemplate(yaml: loadOverridableResource(libraryResource: 'org/eclipsefdn/container/agent.yml')) {
+    node(POD_LABEL) {
+      container('containertools') {
+        unstash('workspace')
+        containerBuild(
+          credentialsId: env.CREDENTIALS_ID,
+          name: env.NAMESPACE + '/' + name,
+          version: version,
+          dockerfile: dockerfile,
+          buildArgs: containerBuildArgs,
+          push: env.GIT_BRANCH == 'master',
+          latest: latest
+        )
+      }
+    }
   }
 }
