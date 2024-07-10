@@ -130,6 +130,7 @@ def buildImage(String name, String version, String dockerfile, Map<String, Strin
     * Build Args ${containerBuildArgs}
     * Dockerfile ${dockerfile}
     * Latest ${latest}
+    * Branch ${env.GIT_BRANCH}
     """
   podTemplate(yaml: loadOverridableResource(libraryResource: 'org/eclipsefdn/container/agent.yml')) {
     node(POD_LABEL) {
