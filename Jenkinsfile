@@ -50,7 +50,7 @@ pipeline {
         }
         stage('Build Image openssh') {
           steps {
-            buildImage('openssh', '9.6_p1-r0', 'apps/ci-admin/openssh/Dockerfile', ['FROM_TAG': '3.19', 'OPENSSH_VERSION': '9.6_p1-r0'])
+            buildImage('openssh', '9.6_p1-r1', 'apps/ci-admin/openssh/Dockerfile', ['FROM_TAG': '3.19', 'OPENSSH_VERSION': '9.6_p1-r1'])
           }
         }
         stage('Build Images eclipse-temurin') {

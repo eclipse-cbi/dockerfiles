@@ -3,7 +3,7 @@ FROM alpine:${FROM_TAG}
 
 # Check on
 # https://pkgs.alpinelinux.org/packages?name=openssh&branch=v3.19
-ARG OPENSSH_VERSION="9.6_p1-r0"
+ARG OPENSSH_VERSION="9.6_p1-r1"
 ENV OPENSSH_VERSION=${OPENSSH_VERSION}
 
 RUN apk --no-cache add openssh=${OPENSSH_VERSION}
