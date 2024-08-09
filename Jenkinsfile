@@ -30,11 +30,11 @@ pipeline {
       parallel {
         stage('Build Library Image') {
           steps {
-            buildLibraryImage('alpine', ['edge', '3.18', '3.19'])
-            buildLibraryImage('debian', ['10-slim', '11-slim', '12-slim'])
+            buildLibraryImage('alpine', ['edge', '3.19', '3.20'])
+            buildLibraryImage('debian', ['11-slim', '12-slim'])
             buildLibraryImage('fedora', ['rawhide', '39', '40'])
-            buildLibraryImage('ubuntu', ['20.04', '22.04'])
-            buildLibraryImage('node', ['20-alpine', '21-alpine'], 'apps/node/Dockerfile')
+            buildLibraryImage('ubuntu', ['22.04', '24.04'])
+            buildLibraryImage('node', ['21-alpine', '22-alpine'], 'apps/node/Dockerfile')
           }
         }
         stage('Build buildpack-deps') {
@@ -50,7 +50,7 @@ pipeline {
         }
         stage('Build Image openssh') {
           steps {
-            buildImage('openssh', '9.6_p1-r1', 'apps/ci-admin/openssh/Dockerfile', ['FROM_TAG': '3.19', 'OPENSSH_VERSION': '9.6_p1-r1'])
+            buildImage('openssh', '9.7_p1-r4', 'apps/ci-admin/openssh/Dockerfile', ['FROM_TAG': '3.20', 'OPENSSH_VERSION': '9.7_p1-r4'])
           }
         }
         stage('Build Images eclipse-temurin') {
@@ -59,6 +59,7 @@ pipeline {
             buildImage('eclipse-temurin-coreutils', '17-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '17-alpine'])
             buildImage('eclipse-temurin-coreutils', '11-ubuntu', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '11']) // eclipse-temurin:11 => ubuntu 22.04
             buildImage('eclipse-temurin-coreutils', '17-ubuntu', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '17']) // eclipse-temurin:17 => ubuntu 22.04
+            buildImage('eclipse-temurin-coreutils', '17-ubuntu2404', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '17-noble']) // eclipse-temurin:17-noble => ubuntu 24.04
           }
         }
         stage('Build Images semeru') {
@@ -77,13 +78,12 @@ pipeline {
         }
         stage('Build Images ubuntu-gtk3-wm') {
           steps {
-            buildImage('ubuntu-gtk3-metacity', '20.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '20.04'])
-            buildImage('ubuntu-gtk3-metacity', '22.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '22.04'])
+            buildImage('ubuntu-gtk3-metacity', '22.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '20.04'])
+            buildImage('ubuntu-gtk3-metacity', '24.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '22.04'])
           }
         }
         stage('Build Images debian-gtk3-wm') {
           steps {
-            buildImage('debian-gtk3-metacity', '10-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '10-slim'])
             buildImage('debian-gtk3-metacity', '11-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '11-slim'])
             buildImage('debian-gtk3-metacity', '12-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '12-slim'])
           }
