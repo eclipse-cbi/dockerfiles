@@ -102,14 +102,6 @@ pipeline {
   }
 }
 
-def buildLibraryImage(String name, List<String> versions, String dockerfile='distros/Dockerfile') {
-  def latestVersion = versions.last()
-  versions.each { version ->
-    String distroName = name + ':' + version
-    buildImage(name, version, dockerfile, ['DISTRO': distroName], version == latestVersion)
-  }
-}
-
 def buildImage(String name, String version, String dockerfile, Map<String, String> buildArgs = [:], boolean latest = false) {
   String distroName = "${env.NAMESPACE}/${name}:${version}"
   def containerBuildArgs = buildArgs.collect { k, v -> "--opt build-arg:${k}=${v}" }.join(' ')
