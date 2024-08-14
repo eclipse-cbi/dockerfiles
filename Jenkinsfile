@@ -28,15 +28,6 @@ pipeline {
     }
     stage('Run Builds') {
       parallel {
-        stage('Build Library Image') {
-          steps {
-            buildLibraryImage('alpine', ['edge', '3.19', '3.20'])
-            buildLibraryImage('debian', ['11-slim', '12-slim'])
-            buildLibraryImage('fedora', ['rawhide', '39', '40'])
-            buildLibraryImage('ubuntu', ['22.04', '24.04'])
-            buildLibraryImage('node', ['21-alpine', '22-alpine'], 'apps/node/Dockerfile')
-          }
-        }
         stage('Build buildpack-deps') {
           steps {
             buildImage('buildpack-deps', 'noble', 'apps/buildpack-deps-ubuntu/Dockerfile', ['BUILDPACK_TAG': 'noble-scm'], true)
