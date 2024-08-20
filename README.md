@@ -17,15 +17,6 @@ Various Dockerfiles for building stuff @ Eclipse
 | openssh | |
 | semeru-ubuntu-coreutils| This image is used as the base image for all Jenkins controller docker images. See also https://github.com/eclipse-cbi/jiro-masters/blob/master/jiro.libsonnet#L28. |
 
-## Distros
-
-| Docker image | Usage / Notes |
-| ------------ | ------------- |
-| alpine | |
-| debian | |
-| fedora | |
-| ubuntu | |
-
 ## GTK3-WM
 
 | Docker image | Usage / Notes |
