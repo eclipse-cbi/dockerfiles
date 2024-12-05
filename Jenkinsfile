@@ -48,15 +48,18 @@ pipeline {
           steps {
             buildImage('eclipse-temurin-coreutils', '11-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '11-alpine'])
             buildImage('eclipse-temurin-coreutils', '17-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '17-alpine'])
+            buildImage('eclipse-temurin-coreutils', '21-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '21-alpine'])
             buildImage('eclipse-temurin-coreutils', '11-ubuntu', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '11']) // eclipse-temurin:11 => ubuntu 22.04
             buildImage('eclipse-temurin-coreutils', '17-ubuntu', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '17']) // eclipse-temurin:17 => ubuntu 22.04
             buildImage('eclipse-temurin-coreutils', '17-ubuntu2404', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '17-noble']) // eclipse-temurin:17-noble => ubuntu 24.04
+            buildImage('eclipse-temurin-coreutils', '21-ubuntu2404', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '21-noble']) // eclipse-temurin:21-noble => ubuntu 24.04
           }
         }
         stage('Build Images semeru') {
           steps {
             buildImage('semeru-ubuntu-coreutils', 'openjdk11-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'open-11-jdk-jammy'])
             buildImage('semeru-ubuntu-coreutils', 'openjdk17-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'open-17-jdk-jammy'])
+            buildImage('semeru-ubuntu-coreutils', 'openjdk21-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'open-21-jdk-jammy'])
           }
         }
         
@@ -69,8 +72,8 @@ pipeline {
         }
         stage('Build Images ubuntu-gtk3-wm') {
           steps {
-            buildImage('ubuntu-gtk3-metacity', '22.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '20.04'])
-            buildImage('ubuntu-gtk3-metacity', '24.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '22.04'])
+            buildImage('ubuntu-gtk3-metacity', '22.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '22.04'])
+            buildImage('ubuntu-gtk3-metacity', '24.04-gtk3.24', 'gtk3-wm/ubuntu-metacity/Dockerfile', ['FROM_TAG': '24.04'])
           }
         }
         stage('Build Images debian-gtk3-wm') {
