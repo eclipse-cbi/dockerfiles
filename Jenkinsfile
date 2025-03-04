@@ -37,6 +37,7 @@ pipeline {
           steps {
             buildImage('hugo', '0.110.0', 'apps/hugo/Dockerfile', ['HUGO_VERSION': '0.110.0'])
             buildImage('hugo_extended', '0.110.0', 'apps/hugo_extended/Dockerfile', ['HUGO_VERSION': '0.110.0'])
+            buildImage('hugo_extended', '0.144.2', 'apps/hugo_extended/Dockerfile', ['HUGO_VERSION': '0.144.2'])
           }
         }
         stage('Build Image openssh') {
