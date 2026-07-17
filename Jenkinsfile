@@ -1,7 +1,7 @@
 @Library('releng-pipeline@main') _
 
 pipeline {
-  agent any 
+  agent any
 
   options {
     skipDefaultCheckout()
@@ -47,23 +47,19 @@ pipeline {
         }
         stage('Build Images eclipse-temurin') {
           steps {
-            buildImage('eclipse-temurin-coreutils', '11-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '11-alpine'])
-            buildImage('eclipse-temurin-coreutils', '17-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '17-alpine'])
             buildImage('eclipse-temurin-coreutils', '21-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '21-alpine'])
-            buildImage('eclipse-temurin-coreutils', '11-ubuntu', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '11']) // eclipse-temurin:11 => ubuntu 22.04
-            buildImage('eclipse-temurin-coreutils', '17-ubuntu', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '17']) // eclipse-temurin:17 => ubuntu 22.04
-            buildImage('eclipse-temurin-coreutils', '17-ubuntu2404', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '17-noble']) // eclipse-temurin:17-noble => ubuntu 24.04
+            buildImage('eclipse-temurin-coreutils', '25-alpine', 'apps/eclipse-temurin-alpine-coreutils/Dockerfile', ['FROM_TAG': '25-alpine'])
             buildImage('eclipse-temurin-coreutils', '21-ubuntu2404', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '21-noble']) // eclipse-temurin:21-noble => ubuntu 24.04
+            buildImage('eclipse-temurin-coreutils', '25-ubuntu2404', 'apps/eclipse-temurin-ubuntu-coreutils/Dockerfile', ['FROM_TAG': '25-noble']) // eclipse-temurin:25-noble => ubuntu 24.04
           }
         }
         stage('Build Images semeru') {
           steps {
-            buildImage('semeru-ubuntu-coreutils', 'openjdk11-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'open-11-jdk-jammy'])
-            buildImage('semeru-ubuntu-coreutils', 'openjdk17-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'open-17-jdk-jammy'])
             buildImage('semeru-ubuntu-coreutils', 'openjdk21-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'open-21-jdk-jammy'])
+            buildImage('semeru-ubuntu-coreutils', 'openjdk25-jammy', 'apps/semeru-ubuntu-coreutils/Dockerfile', ['FROM_TAG': 'open-25-jdk-jammy'])
           }
         }
-        
+
         stage('Build Images fedora-gtk3-wm') {
           steps {
             buildImage('fedora-gtk3-mutter', '42-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '42'])
@@ -109,7 +105,7 @@ pipeline {
 def buildImage(String name, String version, String dockerfile, Map<String, String> buildArgs = [:], boolean latest = false) {
   String distroName = "${env.NAMESPACE}/${name}:${version}"
   def containerBuildArgs = buildArgs.collect { k, v -> "--opt build-arg:${k}=${v}" }.join(' ')
-  
+
   println """
     "###### Build Image: ${distroName}
     * Version ${version}

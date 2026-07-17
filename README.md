@@ -9,13 +9,12 @@ Various Dockerfiles for building stuff @ Eclipse
 
 | Docker image | Usage / Notes |
 | ------------ | ------------- |
-| buildpack-deps-ubuntu | Based on [buildpack-deps](https://hub.docker.com/_/buildpack-deps/) image. Used by GitLab CI templats (add link!). See also https://github.com/eclipse-cbi/dockerfiles/pull/37#issue-2205902199 |
+| buildpack-deps-ubuntu | Based on [buildpack-deps](https://hub.docker.com/_/buildpack-deps/) image. Used by GitLab CI templates (add link!). See also https://github.com/eclipse-cbi/dockerfiles/pull/37#issue-2205902199 |
 | eclipse-temurin-<alpine/ubuntu>-coreutils | |
+| semeru-ubuntu-coreutils | This image is used as the base image for all Jenkins controller docker images. See also https://github.com/eclipse-cbi/jiro-masters/blob/master/jiro.libsonnet#L28. |
 | hugo | |
 | hugo-extended | Used by [hugo-eclipsefdn-website-boilerplate](https://gitlab.eclipse.org/eclipsefdn/it/webdev/hugo-eclipsefdn-website-boilerplate). |
-| node | |
 | openssh | |
-| semeru-ubuntu-coreutils| This image is used as the base image for all Jenkins controller docker images. See also https://github.com/eclipse-cbi/jiro-masters/blob/master/jiro.libsonnet#L28. |
 
 ## GTK3-WM
 
