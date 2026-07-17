@@ -79,6 +79,11 @@ pipeline {
             buildImage('debian-gtk3-metacity', '12-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '12-slim'])
           }
         }
+        stage('Build Image docker-kubectl') {
+          steps {
+            buildImage('docker-kubectl', '0.0.1', 'apps/docker-kubectl/Dockerfile')
+          }
+        }
       }
     }
   }

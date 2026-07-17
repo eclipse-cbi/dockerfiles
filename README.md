@@ -15,6 +15,7 @@ Various Dockerfiles for building stuff @ Eclipse
 | hugo | |
 | hugo-extended | Used by [hugo-eclipsefdn-website-boilerplate](https://gitlab.eclipse.org/eclipsefdn/it/webdev/hugo-eclipsefdn-website-boilerplate). |
 | openssh | |
+| docker-kubectl | This image is used for building and deploying Docker images. |
 
 ## GTK3-WM
 
