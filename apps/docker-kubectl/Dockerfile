@@ -39,9 +39,12 @@ RUN apk add --no-cache \
   jq \
   make \
   openjdk25-jre \
+  openssh-client-common \
+  openssh-client-default \
   unzip \
   wget \
-  yq
+  yq \
+  zip
 
 ENV HOME=/home/default
 WORKDIR ${HOME}

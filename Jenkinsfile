@@ -81,7 +81,7 @@ pipeline {
         }
         stage('Build Image docker-kubectl') {
           steps {
-            buildImage('docker-kubectl', '0.0.1', 'apps/docker-kubectl/Dockerfile')
+            buildImage('docker-kubectl', '0.0.2', 'apps/docker-kubectl/Dockerfile')
           }
         }
       }
