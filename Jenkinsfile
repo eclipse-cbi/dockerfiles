@@ -62,8 +62,8 @@ pipeline {
 
         stage('Build Images fedora-gtk3-wm') {
           steps {
-            buildImage('fedora-gtk3-mutter', '42-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '42'])
             buildImage('fedora-gtk3-mutter', '43-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '43'])
+            buildImage('fedora-gtk3-mutter', '44-gtk3.24', 'gtk3-wm/fedora-mutter/Dockerfile', ['FROM_TAG': '44'])
             buildImage('fedora-gtk3-mutter', 'rawhide-gtk3', 'gtk3-wm/fedora-mutter/rawhide/Dockerfile', ['FROM_TAG': 'rawhide'])
           }
         }
