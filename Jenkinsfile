@@ -75,8 +75,8 @@ pipeline {
         }
         stage('Build Images debian-gtk3-wm') {
           steps {
-            buildImage('debian-gtk3-metacity', '11-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '11-slim'])
             buildImage('debian-gtk3-metacity', '12-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '12-slim'])
+            buildImage('debian-gtk3-metacity', '13-gtk3.24', 'gtk3-wm/debian-metacity/Dockerfile', ['FROM_TAG': '13-slim'])
           }
         }
         stage('Build Image docker-kubectl') {
