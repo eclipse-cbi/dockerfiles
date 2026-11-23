@@ -4,6 +4,8 @@ FROM ubuntu:${FROM_TAG}
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
       libgtk-3-0 \
+      libwebkit2gtk-4.1-0 \
+      libwebkitgtk-6.0-4 \
       tigervnc-standalone-server \
       tigervnc-common \
       tightvncserver \
