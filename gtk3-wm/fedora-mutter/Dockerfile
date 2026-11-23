@@ -3,6 +3,8 @@ FROM fedora:${FROM_TAG}
 
 RUN dnf -y install \
       gtk3 \
+      webkit2gtk4.1 \
+      webkitgtk6.0 \
       tigervnc-server \
       tigervnc \
       mutter \
