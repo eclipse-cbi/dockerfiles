@@ -6,6 +6,18 @@ RUN dnf -y install \
       tigervnc-server \
       tigervnc \
       mutter \
+      iceauth \
+      sessreg \
+      xgamma \
+      xhost \
+      xinput \
+      xisxwayland \
+      xkill \
+      xmodmap \
+      xrandr \
+      xrdb \
+      xset \
+      xsetroot \
       mesa-libGL \
       xorg-x11-fonts-misc \
       xorg-x11-fonts-75dpi \
