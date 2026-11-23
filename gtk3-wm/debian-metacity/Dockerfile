@@ -4,6 +4,8 @@ FROM debian:${FROM_TAG}
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y --force-yes --no-install-recommends \
       libgtk-3-0 \
+      libwebkit2gtk-4.1-0 \
+      libwebkitgtk-6.0-4 \
       tightvncserver \
       metacity \
       x11-xserver-utils \
